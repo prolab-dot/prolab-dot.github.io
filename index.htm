@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="fN1oTqMPxl1bsaXQGhix8ois8XzlVvUwr8NONWqH6MU" />
-    <title>Гидравлический расчет полимерных труб (ПЭ по СП 399.1325800.2018</title>
+    <title>Гидравлический расчет полимерных труб (ПЭ100) по СП 399.1325800.2018</title>
     <meta name="description" content="Онлайн гидравлический калькулятор для полимерных трубопроводов. Расчёт потерь напора в ПЭ100 трубах (ГОСТ Р 70628) и самотечных структурированных трубах (ГОСТ 54475) по СП 399.1325800.2018. Бесплатный расчёт расхода, скорости и наполнения.">
-<meta name="keywords" content="гидравлический калькулятор, расчёт трубопровода, потеря напора, расход воды, скорость потока, ПЭ100 труба, СП 399, калькулятор канализации">
-     <style>
+    <meta name="keywords" content="гидравлический калькулятор, расчёт трубопровода, потеря напора, расход воды, скорость потока, ПЭ100 труба, СП 399, калькулятор канализации">
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -36,8 +36,31 @@
         .subtitle {
             text-align: center;
             color: rgba(255,255,255,0.8);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-size: 14px;
+        }
+        
+        .seo-text {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            color: white;
+        }
+        
+        .seo-text h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+        
+        .seo-text p {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        
+        .seo-text p:last-child {
+            margin-bottom: 0;
         }
         
         .tabs {
@@ -217,6 +240,13 @@
         <h1>🔧 Гидравлический калькулятор полимерных труб — расчёт напора, расхода и скорости онлайн</h1>
         <div class="subtitle">По СП 399.1325800.2018 | ГОСТ Р 70628.2-2023 (ПЭ100), ГОСТ Р 54475-2011 (структурированные)</div>
         
+        <!-- SEO ТЕКСТ ДЛЯ ПОИСКОВЫХ РОБОТОВ -->
+        <div class="seo-text">
+            <h2>Профессиональный гидравлический расчёт онлайн по СП 399</h2>
+            <p>Калькулятор выполняет гидравлический расчёт полимерных трубопроводов в полном соответствии с <strong>СП 399.1325800.2018</strong>. Поддерживаются <strong>напорные трубы ПЭ100 (ГОСТ Р 70628.2-2023)</strong> и <strong>безнапорные трубы со структурированной стенкой (ГОСТ Р 54475-2011)</strong>.</p>
+            <p>Инструмент позволяет рассчитать: <strong>потери напора</strong> на участке, <strong>скорость потока</strong> жидкости, <strong>расход</strong> воды, а также оптимальное <strong>наполнение</strong> для самотечных труб. Все расчёты основаны на актуальных нормативных документах.</p>
+        </div>
+        
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('pressure')">💧 Напорные трубопроводы</button>
             <button class="tab-btn" onclick="switchTab('gravity')">🌊 Самотечные (безнапорные)</button>
@@ -299,7 +329,6 @@
         
         <!-- САМОТЕЧНЫЕ ТРУБОПРОВОДЫ -->
         <div id="gravity-tab" class="tab-content">
-            <!-- Блок выбора трубы (общий для двух режимов) -->
             <div class="calculator-card">
                 <h3>📐 Параметры самотечного трубопровода</h3>
                 <div class="input-row">
@@ -312,7 +341,6 @@
                     </div>
                 </div>
                 
-                <!-- Блок для структурированных труб (ГОСТ Р 54475) -->
                 <div id="struct-block" class="input-row" style="display:none;">
                     <div class="input-group">
                         <label>Серия типоразмеров</label>
@@ -335,7 +363,6 @@
                     </div>
                 </div>
                 
-                <!-- Блок для ПЭ100 труб (ГОСТ Р 70628.2-2023) -->
                 <div id="pe100-block" class="input-row">
                     <div class="input-group">
                         <label>Типоразмер (наружный диаметр, мм)</label>
@@ -360,7 +387,6 @@
                 </div>
             </div>
             
-            <!-- Режим 1: Расчёт расхода по уклону и наполнению -->
             <div class="calculator-card">
                 <h3>📐 Режим 1: Расчёт расхода по уклону и наполнению</h3>
                 <div class="input-row">
@@ -408,7 +434,6 @@
                 <div id="grav-warning" style="display:none;"></div>
             </div>
             
-            <!-- Режим 2: Расчёт наполнения по расходу и уклону -->
             <div class="calculator-card">
                 <h3>📐 Режим 2: Расчёт наполнения по расходу и уклону</h3>
                 <div class="input-row">
@@ -488,9 +513,6 @@
     </div>
     
     <script>
-        // ==============================================
-        // ТАБЛИЧНЫЕ ДАННЫЕ ПО ГОСТ Р 70628.2-2023
-        // ==============================================
         const PE100_WALL_THICKNESS = {
             16: { 7.4: 2.2, 9: 1.8, 11: 1.5, 13.6: 1.2, 17: 1.0, 21: 0.8, 26: 0.6, 33: 0.5, 41: 0.4, 6: 2.7 },
             20: { 7.4: 2.7, 9: 2.2, 11: 1.8, 13.6: 1.5, 17: 1.2, 21: 1.0, 26: 0.8, 33: 0.6, 41: 0.5, 6: 3.4 },
@@ -526,7 +548,6 @@
             1600: { 7.4: 217.0, 9: 178.4, 11: 145.1, 13.6: 117.6, 17: 94.8, 21: 76.2, 26: 61.2, 33: 48.2, 41: 39.0, 6: 266.8 }
         };
         
-        // Данные для структурированных труб (ГОСТ Р 54475-2011)
         const STRUCT_OD_DATA = {
             110: { id_min: 90 }, 125: { id_min: 105 }, 160: { id_min: 134 }, 200: { id_min: 167 },
             250: { id_min: 209 }, 315: { id_min: 263 }, 400: { id_min: 335 }, 500: { id_min: 418 },
@@ -559,7 +580,6 @@
         
         const K_EQUIV = { "PE": 0.014 };
         
-        // Таблица гидравлических параметров (из СП 399, приложение Б, таблица Б.1) для интерполяции
         const GRAVITY_TABLE = [
             { hd: 0.10, r: 0.0635, ratio: 0.2540, k0: 0.0409 },
             { hd: 0.20, r: 0.1206, ratio: 0.4824, k0: 0.1118 },
@@ -589,7 +609,7 @@
         }
         
         let selectedPe100OD = null, selectedPe100SDR = null;
-        let currentPipeParams = null;   // хранит { inner, outer, label, gostName }
+        let currentPipeParams = null;
         
         function getViscosity(temp) { return 1.31; }
         
@@ -609,7 +629,6 @@
             event.target.classList.add('active');
         }
         
-        // ========== НАПОРНЫЕ ==========
         function updatePressureParams() {
             const sizes = PIPE_SIZES["70628"];
             const diamSelect = document.getElementById('press-diameter-select');
@@ -653,7 +672,6 @@
             const sdrFromSelect = document.getElementById('press-sdr-select').value;
             const odFromSelect = document.getElementById('press-diameter-select').value;
             
-            // Приоритет: ручной ввод внутреннего диаметра
             if (!isNaN(idManual) && idManual > 0) {
                 innerDiameter = idManual;
                 if (selectedSDR) sdr = selectedSDR;
@@ -661,7 +679,6 @@
                 else { alert('При ручном вводе внутреннего диаметра необходимо выбрать SDR!'); return; }
                 od = innerDiameter * sdr / (sdr - 2);
             } 
-            // Иначе используем табличные данные
             else if (selectedOD && selectedSDR) {
                 od = selectedOD;
                 sdr = selectedSDR;
@@ -711,7 +728,6 @@
             document.getElementById('press-loss').innerHTML = `${loss.toFixed(2)} м`;
         }
         
-        // ========== САМОТЕЧНЫЕ ==========
         function updateGravityParams() {
             const gost = document.getElementById('grav-gost').value;
             const structBlock = document.getElementById('struct-block');
@@ -775,7 +791,6 @@
             const sdr = parseFloat(document.getElementById('pe100-sdr-select').value);
             const idManual = parseFloat(document.getElementById('pe100-id-manual').value);
             
-            // Приоритет: ручной ввод ID
             if (!isNaN(idManual) && idManual > 0 && sdr) {
                 const inner = idManual;
                 const outer = inner * sdr / (sdr - 2);
@@ -784,7 +799,6 @@
                 currentPipeParams = { inner: inner, outer: outer, label: `SDR ${sdr}`, gostName: "ГОСТ Р 70628.2-2023 (ПЭ100)" };
                 document.getElementById('pe100-wall-thickness').value = ((outer - inner)/2).toFixed(1);
             }
-            // Иначе табличные данные
             else if (od && sdr && PE100_WALL_THICKNESS[od] && PE100_WALL_THICKNESS[od][sdr]) {
                 const wall = PE100_WALL_THICKNESS[od][sdr];
                 const inner = od - 2 * wall;
@@ -798,12 +812,10 @@
             }
         }
         
-        // Общая функция для расчёта скорости и расхода по заданному наполнению и уклону
         function computeFlowAndVelocity(innerDiameterMM, slope, filling) {
             const kEquiv = K_EQUIV["PE"];
             const diamM = innerDiameterMM / 1000;
             const gravParams = getInterpolatedGravityParams(filling);
-            const rh = gravParams.r * diamM;
             const rn = diamM / 4;
             const alpha = 0.3124 * Math.pow(kEquiv, 0.0516);
             const lambdaN = 0.2 * Math.pow(kEquiv / (1000 * 4 * rn), alpha);
@@ -815,7 +827,6 @@
             return { velocity, flowLPS };
         }
         
-        // Режим 1: Расход по уклону и наполнению
         function calculateGravityFlow() {
             if (!currentPipeParams) { alert('Выберите параметры трубы (типоразмер и SN/SDR)'); return; }
             let filling = parseFloat(document.getElementById('grav-filling').value);
@@ -839,7 +850,6 @@
             else warningDiv.style.display = 'none';
         }
         
-        // Режим 2: Расчёт наполнения по расходу и уклону
         function calculateFillingByFlow() {
             if (!currentPipeParams) { alert('Выберите параметры трубы (типоразмер и SN/SDR)'); return; }
             const targetFlow = parseFloat(document.getElementById('target-flow-rate').value);
