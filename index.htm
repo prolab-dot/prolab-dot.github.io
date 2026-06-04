@@ -7,6 +7,21 @@
     <title>Гидравлический калькулятор труб — расчёт напора, расхода и скорости онлайн</title>
     <meta name="description" content="Таблицы Лукиных онлайн. Таблицы Шевелева онлайн. Онлайн гидравлический калькулятор для полимерных трубопроводов. Онлайн гидравлический калькулятор для труб ВЧШГ. Расчёт потерь напора в ПЭ100 трубах (ГОСТ Р 70628) и самотечных структурированных трубах (ГОСТ 54475) по СП 399.1325800.2018. Бесплатный расчёт расхода, скорости и наполнения. Расчет онлайн по таблицам лукиных">
     <meta name="keywords" content="таблица Лукинух, таблица Шевелева гидравлический калькулятор, расчёт трубопровода, потеря напора, расход воды, скорость потока, ПЭ100 труба, СП 399, калькулятор канализации">
+    
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109466159', 'ym');
+    
+        ym(109466159, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109466159" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    
     <style>
         * { box-sizing: border-box; }
         body {
@@ -329,14 +344,14 @@
                     html += `<tr><td>${od}</td><td>${sdr}</td><td>${wall}</td></tr>`;
                 }
             }
-            html += '</tbody><tr>';
+            html += '</tbody></table>';
             cont.innerHTML = html;
         } else if(std === '54475'){
             let html = '<h4>DN/OD (наружный диаметр)</h4><table><thead><tr><th>Наружный, мм</th><th>Внутренний, мм</th></tr></thead><tbody>';
             for(let [od, id] of Object.entries(STRUCT_OD_DATA)){
                 html += `<tr><td>${od}</td><td>${id}</td></tr>`;
             }
-            html += '</tbody></table><h4>DN/ID (внутренний диаметр)</h4><table><thead><tr><th>Внутренний, мм</th><th>Наружный, мм</th></tr></thead><tbody>';
+            html += '</tbody></tr><h4>DN/ID (внутренний диаметр)</h4><table><thead><tr><th>Внутренний, мм</th><th>Наружный, мм</th></tr></thead><tbody>';
             for(let [id, od] of Object.entries(STRUCT_ID_OUTER_BY_INNER)){
                 html += `<tr><td>${id}</td><td>${od}</td></tr>`;
             }
@@ -347,7 +362,7 @@
             for(let [od, id] of Object.entries(DUCTILE_SIZES)){
                 html += `<tr><td>${od}</td><td>${id.toFixed(1)}</td></tr>`;
             }
-            html += '</tbody></table>';
+            html += '</tbody></tr>';
             cont.innerHTML = html;
         }
     }
