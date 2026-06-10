@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Расчет на прочность трубопроводов по СП 399.1325800.2018 (Приложение В) | Полимерные трубопроводы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f4f7fc; color: #1e293b; line-height: 1.5; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap; font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #0f2b3d, #1e6f5c); background-clip: text; -webkit-background-clip: text; color: transparent; margin-bottom: 0.5rem; }
+        .header h1 i { font-size: 2.2rem; color: #1e6f5c; animation: fadeSlide 0.5s ease-out; }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateX(-20px);} to { opacity: 1; transform: translateX(0);} }
+        .badge { background: #e6f7f2; color: #1e6f5c; border-radius: 40px; padding: 0.2rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 1rem; }
+        .calc-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+        @media (max-width: 900px) { .calc-wrapper { grid-template-columns: 1fr; } }
+        .input-panel, .result-panel { background: white; border-radius: 1.75rem; padding: 1.8rem; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05); border: 1px solid #e2edf2; }
+        .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem; border-left: 5px solid #1e6f5c; padding-left: 1rem; }
+        .section-title i { display: none; }
+        .form-group { margin-bottom: 1.4rem; position: relative; }
+        label { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.3px; color: #1e6f5c; display: block; margin-bottom: 0.3rem; }
+        input, select { width: 100%; padding: 0.8rem 1rem; font-size: 0.95rem; border-radius: 1rem; border: 1px solid #cfdfe8; background: #fefefe; transition: 0.2s; font-family: 'Inter', monospace; }
+        input:focus, select:focus { outline: none; border-color: #1e6f5c; box-shadow: 0 0 0 3px rgba(30,111,92,0.2); }
+        .hint-icon { display: inline-flex; align-items: center; justify-content: center; margin-left: 8px; color: #6c8b92; cursor: help; font-size: 0.75rem; background: #eef2f5; border-radius: 50%; width: 18px; height: 18px; transition: 0.2s; position: relative; }
+        .hint-icon:hover { background: #1e6f5c; color: white; }
+        .tooltip-text { visibility: hidden; width: 300px; background-color: #1e2a36; color: #f0f9f4; text-align: left; border-radius: 12px; padding: 0.7rem 1rem; position: absolute; z-index: 100; bottom: 125%; left: 0; font-size: 0.8rem; font-weight: normal; text-transform: none; letter-spacing: normal; line-height: 1.4; box-shadow: 0 6px 14px rgba(0,0,0,0.2); transition: visibility 0.1s, opacity 0.1s; opacity: 0; pointer-events: none; white-space: normal; }
+        .form-group:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .info-note { background: #f0f9fa; border-radius: 1rem; padding: 0.8rem 1rem; font-size: 0.8rem; color: #2c6a5c; margin: 0.8rem 0; }
+        button { background: #1e6f5c; color: white; border: none; padding: 0.9rem 1.5rem; font-size: 1rem; font-weight: 600; border-radius: 2rem; cursor: pointer; transition: background 0.2s; width: 100%; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        button:hover { background: #0f4c3f; }
+        .verdict { font-size: 1.3rem; font-weight: 700; padding: 0.75rem; border-radius: 3rem; margin: 1rem 0; text-align: center; }
+        .verdict.pass { background: #dff9e6; color: #1e6f5c; }
+        .verdict.fail { background: #ffe6e5; color: #b91c1c; }
+        .value-row { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 0.6rem 0; font-size: 0.9rem; }
+        .footnote { font-size: 0.7rem; text-align: center; margin-top: 1.5rem; color: #62748c; }
+        hr { margin: 1rem 0; border: 0; height: 1px; background: #e0edf2; }
+        .pdf-export-btn { background: #2c3e66; margin-top: 0.5rem; }
+        .pdf-export-btn:hover { background: #1e2a4a; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-calculator"></i><span>Расчет на прочность по СП 399.1325800.2018 (Приложение В)</span></h1>
+        <p>Методика расчёта полимерных трубопроводов на прочность и устойчивость · Напорные, безнапорные, дренажные сети</p>
+        <div class="badge"><i class="fas fa-microscope"></i> СП 399.1325800.2018 · формулы (В.1–В.3) + табл. В.1, В.2, В.3</div>
+    </div>
+
+    <div class="calc-wrapper">
+        <div class="input-panel">
+            <div class="section-title">Параметры трубопровода и грунта</div>
+
+            <div class="form-group">
+                <label><i class="fas fa-tag"></i> Тип трубопровода <span class="hint-icon">?<span class="tooltip-text">Выбор влияет на условие прочности: (В.1) для напорных, (В.2) для безнапорных, (В.3) для дренажных.</span></span></label>
+                <select id="pipeType">
+                    <option value="pressure">Напорный (водоснабжение / напорная канализация)</option>
+                    <option value="gravity">Безнапорный (самотечный)</option>
+                    <option value="drainage">Дренажный</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Наружный диаметр D, мм <span class="hint-icon">?<span class="tooltip-text">Номинальный наружный диаметр по ГОСТ Р 70628.2-2023, ГОСТ Р 54475-2011.</span></span></label>
+                <input type="number" id="outerDiam" value="315" step="10">
+            </div>
+            <div class="form-group">
+                <label>Толщина стенки s, мм <span class="hint-icon">?<span class="tooltip-text">Номинальная толщина стенки трубопровода.</span></span></label>
+                <input type="number" id="wallThick" value="18.7" step="0.5">
+            </div>
+
+            <div class="form-group">
+                <label>Кратковременный модуль упругости E₀, МПа <span class="hint-icon">?<span class="tooltip-text">ГОСТ Р 70628.2-2023, ГОСТ Р 54475-2011. ПЭ100 ~ 850–900 МПа</span></span></label>
+                <input type="number" id="E0" value="850" step="10">
+            </div>
+            <div class="form-group">
+                <label>Долговременный модуль упругости E<sub>t</sub>, МПа <span class="hint-icon">?<span class="tooltip-text">Для срока службы 50 лет. ПЭ100 ~ 150–250 МПа</span></span></label>
+                <input type="number" id="Et" value="200" step="5">
+            </div>
+            <div class="form-group" id="pressureGroup">
+                <label>Внутреннее давление P (МПа) <span class="hint-icon">?<span class="tooltip-text">Максимальное рабочее давление (MOP)</span></span></label>
+                <input type="number" id="internalPressure" value="1.0" step="0.05">
+            </div>
+            <div class="form-group">
+                <label>Удельный вес грунта γ, кН/м³ <span class="hint-icon">?<span class="tooltip-text">Таблица В.3 СП 399: пески 17–17,5; супеси 18; суглинки 18; глины 19 кН/м³.</span></span></label>
+                <input type="number" id="gammaGr" value="18" step="0.5">
+            </div>
+            <div class="form-group">
+                <label>Глубина засыпки H<sub>зас</sub>, м <span class="hint-icon">?<span class="tooltip-text">Расстояние от верха трубы до поверхности земли.</span></span></label>
+                <input type="number" id="depthFill" value="2.0" step="0.2">
+            </div>
+            <div class="form-group">
+                <label>Категория дороги <span class="hint-icon">?<span class="tooltip-text">Выбрать из списка.</span></span></label>
+                <select id="roadCategory">
+                    <option value="I">I категория (автомагистраль)</option>
+                    <option value="II">II категория (магистральная)</option>
+                    <option value="III" selected>III категория (обычная)</option>
+                    <option value="IV">IV категория (местная)</option>
+                    <option value="V">V категория (подъездная)</option>
+                    <option value="railway">Железная дорога</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Транспортная нагрузка q<sub>t</sub>, МПа <span class="hint-icon">?<span class="tooltip-text">Нагрузка от транспорта. Автоматически подставляется по категории дороги.</span></span></label>
+                <input type="number" id="qTraffic" value="0.018" step="0.002">
+            </div>
+            <div class="form-group">
+                <label>Степень уплотнения грунта <span class="hint-icon">?<span class="tooltip-text">Коэффициент уплотнения по табл. В.2: 0,85 (без контроля), 0,92 (периодический), 0,95 (тщательный), 0,98 (высокое).</span></span></label>
+                <select id="compaction">
+                    <option value="0.85">0.85 (низкое)</option>
+                    <option value="0.92" selected>0.92 (среднее)</option>
+                    <option value="0.95">0.95 (тщательное)</option>
+                    <option value="0.98">0.98 (высокое)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Категория грунта (табл. В.3) <span class="hint-icon">?<span class="tooltip-text">Выбрать из списка.</span></span></label>
+                <select id="soilCategory">
+                    <option value="G1">Г-I (пески крупные)</option>
+                    <option value="G2">Г-II (мелкие пески)</option>
+                    <option value="G3" selected>Г-III (пылеватые пески/супеси)</option>
+                    <option value="G4">Г-IV (суглинки)</option>
+                    <option value="G5">Г-V (твердые супеси)</option>
+                    <option value="G6">Г-VI (глины)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Коэффициент Пуассона μ <span class="hint-icon">?<span class="tooltip-text">Для полиэтилена и ПП-Б ~ 0,4–0,45. Для НПВХ ~ 0,38.</span></span></label>
+                <input type="number" id="poisson" value="0.4" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Кратковременная прочность σ<sub>0</sub>, МПа <span class="hint-icon">?<span class="tooltip-text">Предел текучести при растяжении. Для ПЭ100 ~ 23–25 МПа, ПЭ80 ~ 20 МПа, ПВХ ~ 45–50 МПа. По ГОСТ Р 70628.2-2023.</span></span></label>
+                <input type="number" id="sigma0" value="25" step="1">
+            </div>
+            <div class="form-group" id="k3dGroup" style="display: none;">
+                <label>Коэффициент K<sub>3,д</sub> (дренажные) <span class="hint-icon">?<span class="tooltip-text">Коэффициент запаса для дренажных труб по Приложению В.3, зависит от вида перфорации.</span></span></label>
+                <input type="number" id="K3d" value="1.1" step="0.05">
+            </div>
+            <button id="calcBtn"><i class="fas fa-microchip"></i> Выполнить проверку прочности</button>
+            <button id="pdfBtn" class="pdf-export-btn"><i class="fas fa-file-pdf"></i> Экспорт расчета в PDF</button>
+        </div>
+
+        <div class="result-panel">
+            <div class="section-title"><i class="fas fa-chart-simple"></i> Результат расчёта</div>
+            <div id="resultArea">
+                <div class="info-note" style="text-align:center"><i class="fas fa-info-circle"></i> Нажмите «Выполнить проверку» для расчёта</div>
+            </div>
+            <div id="dynamicDetails" style="margin-top: 0.8rem;"></div>
+        </div>
+    </div>
+    <div style="background: #eef3f6; border-radius: 1.25rem; padding: 1rem; margin-top: 1rem; font-size:0.85rem;">
+        <i class="fas fa-book-open"></i> <strong>Примечание:</strong> Наведите курсор на значок <i class="fas fa-question-circle"></i> рядом с названием поля — появится подсказка.
+    </div>
+</div>
+
+<script>
+    function getTrafficLoadByRoadCategory(category) {
+        switch(category) {
+            case 'I': return 0.035;
+            case 'II': return 0.028;
+            case 'III': return 0.018;
+            case 'IV': return 0.012;
+            case 'V': return 0.006;
+            case 'railway': return 0.070;
+            default: return 0.018;
+        }
+    }
+    function getSoilModulus(category, compactionLevel) {
+        const table = {
+            'G1': { 0.85:5, 0.92:8, 0.95:16, 0.98:26 },
+            'G2': { 0.85:3.5, 0.92:6, 0.95:12, 0.98:18 },
+            'G3': { 0.85:2.5, 0.92:5, 0.95:7.5, 0.98:10 },
+            'G4': { 0.85:2, 0.92:3.5, 0.95:5.5, 0.98:8 },
+            'G5': { 0.85:1.5, 0.92:2.5, 0.95:5, 0.98:7.5 },
+            'G6': { 0.85:0.9, 0.92:1.2, 0.95:2.5, 0.98:3.5 }
+        };
+        const comp = parseFloat(compactionLevel);
+        let mod = (table[category] || table['G3'])[comp];
+        if (!mod) mod = (comp >= 0.95) ? (table[category][0.95] || 3) : (table[category][0.85] || 2);
+        return mod;
+    }
+
+    let lastCalcData = null;
+
+    function performCalculation() {
+        const pipeType = document.getElementById('pipeType').value;
+        const E0 = parseFloat(document.getElementById('E0').value);
+        const Et = parseFloat(document.getElementById('Et').value);
+        let P_int_raw = parseFloat(document.getElementById('internalPressure').value);
+        const D_mm = parseFloat(document.getElementById('outerDiam').value);
+        const s_mm = parseFloat(document.getElementById('wallThick').value);
+        const gammaGr = parseFloat(document.getElementById('gammaGr').value);
+        const H_fill = parseFloat(document.getElementById('depthFill').value);
+        let qTraffic = parseFloat(document.getElementById('qTraffic').value);
+        const compaction = parseFloat(document.getElementById('compaction').value);
+        const mu = parseFloat(document.getElementById('poisson').value);
+        const sigma0 = parseFloat(document.getElementById('sigma0').value);
+        let K3d = 1.1;
+        if (document.getElementById('K3d')) K3d = parseFloat(document.getElementById('K3d').value);
+        const soilCat = document.getElementById('soilCategory').value;
+        const roadCat = document.getElementById('roadCategory').value;
+        
+        if (isNaN(qTraffic)) qTraffic = getTrafficLoadByRoadCategory(roadCat);
+        let P_int = (pipeType === 'pressure') ? (isNaN(P_int_raw) ? 0 : P_int_raw) : 0;
+        
+        if (isNaN(E0) || isNaN(Et) || isNaN(D_mm) || isNaN(s_mm) || isNaN(gammaGr) || isNaN(H_fill) || isNaN(sigma0)) {
+            showError('Заполните все числовые поля корректно');
+            return null;
+        }
+        
+        const D = D_mm / 1000;
+        const s = s_mm / 1000;
+        if (s <= 0 || D <= 0) { showError('Толщина и диаметр должны быть > 0'); return null; }
+        
+        const I_moment = Math.pow(s, 3) / 12;
+        const G0 = 53.7 * (E0 * I_moment) / ((1 - mu*mu) * Math.pow(D - s, 3));
+        let psi_m = 0.04;
+        if (G0 < 276000) psi_m = 0.04;
+        else if (G0 >= 276000 && G0 <= 290000) psi_m = 0.03;
+        else psi_m = 0.02;
+        if (compaction > 0.95) psi_m *= 0.8;
+        
+        const E_gr = getSoilModulus(soilCat, compaction);
+        const q_rp = gammaGr * (H_fill + 0.1073 * D) / 1000;
+        const q_c = q_rp + qTraffic;
+        let K_ok = 1.0;
+        if (pipeType === 'pressure' && q_c > 0 && P_int > 0) {
+            K_ok = 1 / (1 + 2 * P_int / q_c);
+            if (isNaN(K_ok)) K_ok = 1;
+        } else if (pipeType === 'pressure') K_ok = 0.9;
+        else K_ok = 1.0;
+        
+        const K_s = 0.09, K_w = 0.11, K_sp = 0.15, K_rp = 0.06;
+        const psi_rp = (K_ok * K_s * K_w * q_rp) / (K_sp * G0 + K_rp * E_gr);
+        const psi_t = (K_ok * K_sp * qTraffic) / (K_sp * G0 + K_rp * E_gr);
+        let psi = psi_rp + psi_t + psi_m;
+        psi = Math.min(psi, 0.10);
+        const epsilon_p = 4.27 * 1.0 * (s / D) * psi * 1.0;
+        let epsilon = 0;
+        if (pipeType === 'pressure') {
+            const P_net = Math.max(0, P_int - q_c);
+            epsilon = (P_net) / (2 * E0) * (D / s);
+        } else {
+            epsilon = - (q_c) / (2 * E0) * (D / s);
+        }
+        const K3_safety = 1.25;
+        const epsilon_pp = sigma0 / (Et * K3_safety);
+        const epsilon_pn = sigma0 / (E0 * K3_safety);
+        let leftValue = 0, conditionText = '', passed = false;
+        
+        if (pipeType === 'pressure' || pipeType === 'gravity') {
+            leftValue = Math.abs(epsilon_p) / epsilon_pp + Math.abs(epsilon) / epsilon_pn;
+            conditionText = `Условие (В.1/В.2): εₚ/εₚ,ₚ + |ε|/εₚ,ₙ = ${leftValue.toFixed(5)} ≤ 1,0`;
+            passed = leftValue <= 1.0;
+        } else {
+            const totalStrain = epsilon_p + epsilon;
+            leftValue = (Math.abs(totalStrain) / epsilon_pp) * K3d;
+            conditionText = `Дренажное условие (В.3): (|εₚ+ε|/εₚ,ₚ)·K₃,д = ${leftValue.toFixed(5)} ≤ 1,0`;
+            passed = leftValue <= 1.0;
+        }
+        const roadCatText = document.getElementById('roadCategory').options[document.getElementById('roadCategory').selectedIndex]?.text || 'III';
+        
+        lastCalcData = {
+            pipeType, E0, Et, P_int: (pipeType === 'pressure' ? P_int : 0), D_mm, s_mm, gammaGr, H_fill, qTraffic, compaction, mu, sigma0, 
+            K3d: (pipeType==='drainage'?K3d:1.1), soilCat, roadCatText,
+            G0, E_gr, q_rp, q_c, K_ok, psi, epsilon_p, epsilon, epsilon_pp, epsilon_pn, leftValue, conditionText, passed,
+            psi_m, psi_rp, psi_t, I_moment
+        };
+        
+        const verdictHtml = `<div class="verdict ${passed ? 'pass' : 'fail'}">
+            <i class="fas ${passed ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> 
+            ${passed ? `УСЛОВИЕ ПРОЧНОСТИ ВЫПОЛНЯЕТСЯ (${leftValue.toFixed(5)} < 1,0)` : `УСЛОВИЕ ПРОЧНОСТИ НЕ ВЫПОЛНЯЕТСЯ (${leftValue.toFixed(5)} ≥ 1,0)`}
+        </div>`;
+        const details = `
+            <div class="value-row"><strong>Тип трубопровода:</strong> ${pipeType === 'pressure' ? 'Напорный' : (pipeType === 'gravity' ? 'Безнапорный' : 'Дренажный')}</div>
+            <div class="value-row"><strong>Категория дороги / нагрузка:</strong> ${roadCatText} → q<sub>т</sub> = ${qTraffic.toFixed(4)} МПа</div>
+            <div class="value-row"><strong>Деформация овализации εₚ:</strong> ${epsilon_p.toExponential(4)}</div>
+            <div class="value-row"><strong>Деформация от нагрузок ε:</strong> ${epsilon.toExponential(4)}</div>
+            <div class="value-row"><strong>Предельная деформация (релаксация) εₚ,ₚ:</strong> ${epsilon_pp.toExponential(4)}</div>
+            <div class="value-row"><strong>Предельная деформация ползучести εₚ,ₙ:</strong> ${epsilon_pn.toExponential(4)}</div>
+            <div class="value-row"><strong>Относит. укорочение ψ (овализация):</strong> ${psi.toFixed(5)}</div>
+            <div class="value-row"><strong>Модуль деформации грунта E<sub>гр</sub>, МПа:</strong> ${E_gr}</div>
+            <div class="value-row"><strong>Кольцевая жесткость G₀, Па:</strong> ${G0.toFixed(0)}</div>
+            <hr>
+            <div class="value-row"><strong>Результат (левая часть условия):</strong> <span style="font-weight:800;">${leftValue.toFixed(5)}</span> ${passed ? '(менее 1,0)' : '(более или равно 1,0)'}</div>
+            <div class="info-note">${conditionText}</div>
+        `;
+        document.getElementById('resultArea').innerHTML = verdictHtml + details;
+        return lastCalcData;
+    }
+    
+    function showError(msg) {
+        document.getElementById('resultArea').innerHTML = `<div class="info-note" style="background:#ffe1de; color:#a00;"><i class="fas fa-circle-exclamation"></i> ${msg}</div>`;
+    }
+    
+    function exportToPDF() {
+        if (!lastCalcData) {
+            alert('Сначала выполните расчёт (кнопка "Выполнить проверку прочности")');
+            return;
+        }
+        const d = lastCalcData;
+        const pipeTypeName = d.pipeType === 'pressure' ? 'Напорный' : (d.pipeType === 'gravity' ? 'Безнапорный' : 'Дренажный');
+        const soilCatName = document.getElementById('soilCategory').options[document.getElementById('soilCategory').selectedIndex]?.text || d.soilCat;
+        
+        const printHtml = `<!DOCTYPE html>
+        <html><head><meta charset="UTF-8"><title>Расчет на прочность СП 399.1325800.2018</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:'Times New Roman',Times,serif; font-size:14pt; padding:15mm 12mm; background:white; color:#1e293b; line-height:1.4;}
+            h1{font-size:24pt; font-weight:bold; color:#1e6f5c; border-bottom:2px solid #1e6f5c; margin-bottom:10pt; padding-bottom:6pt;}
+            h2{font-size:18pt; font-weight:bold; margin:16pt 0 8pt 0; color:#0f4c3f;}
+            h3{font-size:16pt; font-weight:bold; margin:12pt 0 6pt 0; color:#2c6a5c;}
+            p, li, .table-caption, .formula-line{font-size:14pt; line-height:1.4;}
+            table{width:100%; border-collapse:collapse; margin:10pt 0; font-size:12pt;}
+            td,th{border:1px solid #8ba0b0; padding:6pt 8pt; vertical-align:top; font-size:12pt;}
+            th{background:#e6f7f2; font-weight:700;}
+            .formula-block{background:#f8fafc; padding:10pt 14pt; border-left:4px solid #1e6f5c; margin:12pt 0; font-family:'Times New Roman',Times,serif; font-size:14pt;}
+            .formula-block div, .formula-block strong{font-size:14pt;}
+            .verdict-pdf{font-size:16pt; font-weight:700; text-align:center; padding:12pt; border-radius:40px; margin:14pt 0;}
+            .pass-pdf{background:#dff9e6; color:#1e6f5c;}
+            .fail-pdf{background:#ffe6e5; color:#b91c1c;}
+            ul{margin-left:25pt; margin-bottom:10pt;}
+            li{font-size:13pt;}
+        </style>
+        </head>
+        <body>
+        <div class="report-container">
+            <h1>Расчет на прочность полимерного трубопровода</h1>
+            <p><strong>По СП 399.1325800.2018 «Системы водоснабжения и канализации наружные из полимерных материалов»</strong><br>Приложение В (обязательное) — Методика прочностного расчета трубопроводов</p>
+            <p><strong>Дата расчёта:</strong> ${new Date().toLocaleString()}</p>
+            <h2>1. Исходные данные (тип: ${pipeTypeName})</h2>
+            <table>
+                <thead><tr><th>Параметр</th><th>Значение</th><th>Примечание</th></tr></thead>
+                <tbody>
+                    <tr><td>D, мм</td><td>${d.D_mm}</td><td>наружный диаметр по ГОСТ Р 70628.2-2023, ГОСТ Р 54475-2011</td></tr>
+                    <tr><td>s, мм</td><td>${d.s_mm}</td><td>номинальная толщина стенки трубопровода</td></tr>
+                    <tr><td>E₀, МПа</td><td>${d.E0}</td><td>кратковременный модуль (ГОСТ Р 70628.2-2023)</td></tr>
+                    <tr><td>E<sub>t</sub>, МПа</td><td>${d.Et}</td><td>долговременный модуль (ползучесть)</td></tr>
+                    <tr><td>P, МПа</td><td>${d.P_int}</td><td>внутреннее давление</td></tr>
+                    <tr><td>γ, кН/м³</td><td>${d.gammaGr}</td><td>удельный вес грунта</td></tr>
+                    <tr><td>H<sub>зас</sub>, м</td><td>${d.H_fill}</td><td>глубина засыпки</td></tr>
+                    <tr><td>q<sub>t</sub>, МПа</td><td>${d.qTraffic.toFixed(4)}</td><td>транспортная нагрузка (${d.roadCatText})</td></tr>
+                    <tr><td>Степень уплотнения</td><td>${d.compaction}</td><td>коэффициент уплотнения</td></tr>
+                    <tr><td>Категория грунта</td><td>${soilCatName}</td><td>табл.В.3 (E<sub>гр</sub>=${d.E_gr} МПа)</td></tr>
+                    <tr><td>μ</td><td>${d.mu}</td><td>коэффициент Пуассона</td></tr>
+                    <tr><td>σ₀, МПа</td><td>${d.sigma0}</td><td>предел текучести (ГОСТ Р 70628.2-2023)</td></tr>
+                    ${d.pipeType==='drainage' ? `<tr><td>K<sub>3,д</sub></td><td>${d.K3d}</td><td>коэффициент запаса для дренажа</td></tr>` : ''}
+                </tbody>
+            </table>
+            <h2>2. Расчёт по формулам Приложения В СП 399.1325800.2018</h2>
+            <div class="formula-block">
+                <div><strong>▶ Момент инерции (В.9):</strong> I = s³/12 = ${(d.I_moment*1e12).toFixed(2)} мм⁴/мм</div>
+                <div><strong>▶ Кольцевая жесткость G₀ (В.8):</strong> G₀ = 53,7·E₀·I/[(1-μ²)(D-s)³] = ${d.G0.toFixed(0)} Па</div>
+                <div><strong>▶ Нагрузка от грунта q<sub>rp</sub> (В.7):</strong> q<sub>rp</sub> = γ·(H+0,1073D)/1000 = ${d.q_rp.toFixed(5)} МПа</div>
+                <div><strong>▶ Суммарная нагрузка q<sub>c</sub> = q<sub>rp</sub>+q<sub>t</sub> = ${d.q_c.toFixed(5)} МПа</strong></div>
+                <div><strong>▶ Коэффициент округления K<sub>ок</sub> (В.13):</strong> = ${d.K_ok.toFixed(4)}</div>
+                <div><strong>▶ Относительное укорочение ψ (овализация):</strong> ψ = ψ<sub>rp</sub> + ψ<sub>t</sub> + ψ<sub>m</sub> = ${d.psi.toFixed(5)} (ψ<sub>m</sub>=${d.psi_m.toFixed(4)} по табл.В.1)</div>
+                <div><strong>▶ Деформация от овализации εₚ (В.4):</strong> εₚ = 4,27·(s/D)·ψ = ${d.epsilon_p.toExponential(4)}</div>
+                <div><strong>▶ Деформация от нагрузок ε (В.15):</strong> ε = ${d.epsilon.toExponential(4)}</div>
+                <div><strong>▶ Предельная деформация (релаксация) εₚ,ₚ (В.26):</strong> εₚ,ₚ = σ₀/(E<sub>t</sub>·K₃) = ${d.epsilon_pp.toExponential(4)} (K₃=1,25)</div>
+                <div><strong>▶ Предельная деформация ползучести εₚ,ₙ (В.27):</strong> εₚ,ₙ = σ₀/(E₀·K₃) = ${d.epsilon_pn.toExponential(4)}</div>
+            </div>
+            <h2>3. Проверка условия прочности</h2>
+            <div class="formula-block">
+                ${d.pipeType==='drainage' ? 
+                    `<strong>Условие (В.3) для дренажных труб:</strong> (|εₚ+ε|/εₚ,ₚ)·K₃,д ≤ 1,0` : 
+                    `<strong>Условие (В.1) для напорных или (В.2) для безнапорных:</strong> εₚ/εₚ,ₚ + |ε|/εₚ,ₙ ≤ 1,0`}<br>
+                <strong>Результат (левая часть условия) = ${d.leftValue.toFixed(5)}</strong><br>
+                <strong>Вывод: ${d.leftValue.toFixed(5)} ${d.leftValue < 1.0 ? '< 1,0' : (d.leftValue > 1.0 ? '> 1,0' : '= 1,0')}</strong>
+            </div>
+            <div class="verdict-pdf ${d.passed?'pass-pdf':'fail-pdf'}">
+                ${d.passed ? '✓ УСЛОВИЕ ПРОЧНОСТИ ВЫПОЛНЯЕТСЯ (' + d.leftValue.toFixed(5) + ' < 1,0)' : '✗ УСЛОВИЕ ПРОЧНОСТИ НЕ ВЫПОЛНЯЕТСЯ (' + d.leftValue.toFixed(5) + ' ≥ 1,0)'}
+            </div>
+            ${!d.passed ? '<p style="color:#b91c1c; background:#ffe6e5; padding:10pt; border-radius:8pt;">Рекомендации: увеличить толщину стенки (меньше SDR), повысить SN, улучшить уплотнение грунта, снизить нагрузку.</p>' : ''}
+        </div>
+        </body></html>`;
+        
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0px';
+        iframe.style.height = '0px';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(printHtml);
+        doc.close();
+        setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1500); }, 400);
+    }
+    
+    const roadSelect = document.getElementById('roadCategory');
+    const qTrafficInput = document.getElementById('qTraffic');
+    function updateTrafficLoad() { qTrafficInput.value = getTrafficLoadByRoadCategory(roadSelect.value); }
+    roadSelect.addEventListener('change', updateTrafficLoad);
+    updateTrafficLoad();
+    
+    document.getElementById('pipeType').addEventListener('change', () => {
+        const k3dGroup = document.getElementById('k3dGroup');
+        if (document.getElementById('pipeType').value === 'drainage') k3dGroup.style.display = 'block';
+        else k3dGroup.style.display = 'none';
+        performCalculation();
+    });
+    document.getElementById('calcBtn').addEventListener('click', () => performCalculation());
+    document.getElementById('pdfBtn').addEventListener('click', () => { if(lastCalcData) exportToPDF(); else alert('Сначала выполните расчёт'); });
+    
+    performCalculation();
+</script>
+</body>
+</html>
