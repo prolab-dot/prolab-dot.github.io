@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Гидравлический калькулятор самотечных труб</title>
+    <meta name="description" content="Расчёт расхода, скорости и наполнения для самотечных труб: ПЭ100, структурированные (ГОСТ 54475), ВЧШГ (чугун). Бесплатный онлайн-расчёт по СП 399.">
+    <meta name="keywords" content="самотечные трубы, безнапорные, канализация, расход, скорость, наполнение, гидравлический калькулятор, таблицы Лукиных, СП 399">
+    
+    <!-- Yandex.Metrika counter (опционально, оставлен по желанию) -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109466159', 'ym');
+        ym(109466159, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer:document.referrer, url:location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109466159" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f2b3d, #1e6f5c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .header h1 i {
+            font-size: 2rem;
+            color: #1e6f5c;
+            opacity: 1;
+        }
+        .header p {
+            font-size: 1rem;
+            color: #475569;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #1e6f5c;
+            padding-left: 1rem;
+        }
+        .card-title i {
+            color: #1e6f5c;
+            font-size: 1.5rem;
+        }
+        
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+        input, select {
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', monospace;
+            background: #fefefe;
+            transition: all 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1e6f5c;
+            box-shadow: 0 0 0 3px rgba(30,111,92,0.2);
+        }
+        input[readonly] {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            border-color: #e2e8f0;
+        }
+        button {
+            background: #1e6f5c;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+        button:hover {
+            background: #0f4c3f;
+            transform: translateY(-2px);
+        }
+        .results {
+            margin-top: 1.8rem;
+            background: #f8fafc;
+            border-radius: 1.25rem;
+            padding: 1rem;
+            border: 1px solid #eef2f6;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            font-weight: 600;
+            color: #334155;
+        }
+        .result-value {
+            font-weight: 700;
+            color: #1e6f5c;
+            font-size: 1rem;
+        }
+        .warning {
+            background: #fff9e6;
+            border-left: 5px solid #f59e0b;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            color: #b45309;
+            font-size: 0.85rem;
+        }
+        .info-note {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+            color: #5b6e8c;
+        }
+        hr {
+            margin: 1rem 0;
+            border-color: #e2e8f0;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 1rem; }
+            .header h1 { font-size: 1.6rem; }
+        }
+        .badge {
+            background: #eef2ff;
+            border-radius: 20px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>
+            <i class="fas fa-water"></i>
+            <span>Гидравлика самотечных труб</span>
+        </h1>
+        <p>Расчёт расхода, скорости и наполнения для безнапорных трубопроводов (канализация, ливнёвка) по СП 399. ПЭ100, структурированные трубы ГОСТ 54475, чугун ВЧШГ.</p>
+    </div>
+
+    <!-- Карточка: выбор трубы (всё в одном компактно) -->
+    <div class="card">
+        <div class="card-title"><i class="fas fa-pipe-valve"></i> Параметры трубопровода</div>
+        <div class="grid-2col">
+            <div class="input-group">
+                <label>Тип / ГОСТ трубы</label>
+                <select id="pipe-type" onchange="updatePipeConfig()">
+                    <option value="pe100" selected>ГОСТ Р 70628.2-2023 (ПЭ100, напорная, но самотечный расчёт)</option>
+                    <option value="struct">ГОСТ Р 54475-2011 (Структурированная, DN/OD или DN/ID)</option>
+                    <option value="ductile">ГОСТ ISO 2531-2022 (ВЧШГ, чугун)</option>
+                </select>
+            </div>
+            <!-- динамические блоки для каждого типа -->
+        </div>
+        
+        <div id="pe100-block">
+            <div class="grid-2col">
+                <div class="input-group"><label>Наружный диаметр (мм)</label><select id="pe100-diameter" onchange="updatePe100BySelect()"></select></div>
+                <div class="input-group"><label>SDR</label><select id="pe100-sdr" onchange="updatePe100BySelect()"></select></div>
+                <div class="input-group"><label>Внутр. диаметр (ручной, мм)</label><input type="number" id="pe100-id-manual" placeholder="Вручную" step="1" oninput="updatePe100Manual()"></div>
+            </div>
+            <div class="grid-2col">
+                <div class="input-group"><label>Толщина стенки (мм, расч.)</label><input type="text" id="pe100-wall" readonly class="readonly-gray" placeholder="авто"></div>
+            </div>
+        </div>
+
+        <div id="struct-block" style="display:none;">
+            <div class="grid-2col">
+                <div class="input-group"><label>Серия (система)</label><select id="struct-series" onchange="updateStructSeries()"><option value="OD">DN/OD (наружный → внутренний)</option><option value="ID">DN/ID (внутренний → наружный)</option></select></div>
+                <div class="input-group"><label>Типоразмер (мм)</label><select id="struct-size" onchange="updateStructFromSize()"></select></div>
+            </div>
+        </div>
+
+        <div id="ductile-block" style="display:none;">
+            <div class="grid-2col">
+                <div class="input-group"><label>Наружный диаметр (мм)</label><select id="ductile-od" onchange="updateDuctileByOD()"></select></div>
+                <div class="input-group"><label>Внутр. диаметр (ручной, мм)</label><input type="number" id="ductile-id-manual" placeholder="или вручную" step="0.1" oninput="updateDuctileManual()"></div>
+            </div>
+        </div>
+        
+        <div class="info-note"><i class="fas fa-info-circle"></i> Выбранная труба: <span id="selected-pipe-summary">—</span></div>
+    </div>
+
+    <!-- Режим 1: Расход по уклону и наполнению -->
+    <div class="card">
+        <div class="card-title"><i class="fas fa-tachometer-alt"></i> Режим 1: Расход воды при заданных наполнении и уклоне</div>
+        <div class="grid-2col">
+            <div class="input-group"><label>Наполнение h/d (0.10 … 0.95)</label><input type="number" id="filling-value" value="0.50" step="0.01" min="0.1" max="0.95"></div>
+            <div class="input-group"><label>Уклон трубы i (например, 0.005 = 5‰)</label><input type="number" id="slope-value" value="0.005" step="0.001"></div>
+            <div class="input-group"><label>Температура воды (°C)</label><input type="number" id="temp-value" value="15" readonly style="background:#f1f5f9;" title="Фиксировано для простоты"></div>
+        </div>
+        <button onclick="calculateFlowBySlope()"><i class="fas fa-calculator"></i> Рассчитать расход и скорость</button>
+        <div id="slope-results" class="results">
+            <div class="result-item"><span class="result-label">Тип трубы:</span><span class="result-value" id="slope-pipe-name">—</span></div>
+            <div class="result-item"><span class="result-label">Внутренний диаметр:</span><span class="result-value" id="slope-id">—</span></div>
+            <div class="result-item"><span class="result-label">Скорость потока:</span><span class="result-value" id="slope-velocity">—</span></div>
+            <div class="result-item"><span class="result-label">Расход Q:</span><span class="result-value" id="slope-flow">—</span></div>
+        </div>
+        <div id="warning-slope" class="warning" style="display:none;"></div>
+    </div>
+
+    <!-- Режим 2: Наполнение по расходу и уклону -->
+    <div class="card">
+        <div class="card-title"><i class="fas fa-percent"></i> Режим 2: Подбор наполнения по расходу</div>
+        <div class="grid-2col">
+            <div class="input-group"><label>Целевой расход (л/с)</label><input type="number" id="target-flow" value="20" step="1" placeholder="л/с"></div>
+            <div class="input-group"><label>Уклон i (0.005 = 5‰)</label><input type="number" id="target-slope-fill" value="0.005" step="0.001"></div>
+        </div>
+        <button onclick="calculateFillingByTarget()"><i class="fas fa-chart-line"></i> Рассчитать наполнение h/d</button>
+        <div id="target-results" class="results">
+            <div class="result-item"><span class="result-label">Тип трубы:</span><span class="result-value" id="target-pipe-name">—</span></div>
+            <div class="result-item"><span class="result-label">Внутренний диаметр:</span><span class="result-value" id="target-id">—</span></div>
+            <div class="result-item"><span class="result-label">Скорость потока:</span><span class="result-value" id="target-velocity">—</span></div>
+            <div class="result-item"><span class="result-label">Наполнение h/d:</span><span class="result-value" id="target-filling">—</span></div>
+        </div>
+        <div id="warning-target" class="warning" style="display:none;"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 · Гидравлический калькулятор самотечных труб · Расчёт по СП 399.1325800.2018, метод Павловского для чугуна, обобщённые зависимости для полимеров. Данные не покидают ваш браузер.</p>
+    </footer>
+</div>
+
+<script>
+    // ---------- ДАННЫЕ СОРТАМЕНТА (полностью как в исходнике, адаптировано) ----------
+    const PE100_WALL = {
+        16:{7.4:2.2,9:1.8,11:1.5,13.6:1.2,17:1,21:0.8,26:0.6,33:0.5,41:0.4,6:2.7},
+        20:{7.4:2.7,9:2.2,11:1.8,13.6:1.5,17:1.2,21:1,26:0.8,33:0.6,41:0.5,6:3.4},
+        25:{7.4:3.4,9:2.8,11:2.3,13.6:1.8,17:1.5,21:1.2,26:1,33:0.8,41:0.6,6:4.2},
+        32:{7.4:4.3,9:3.6,11:2.9,13.6:2.4,17:1.9,21:1.5,26:1.2,33:1,41:0.8,6:5.4},
+        40:{7.4:5.4,9:4.5,11:3.7,13.6:3,17:2.4,21:1.9,26:1.5,33:1.2,41:1,6:6.7},
+        50:{7.4:6.8,9:5.6,11:4.6,13.6:3.7,17:3,21:2.4,26:1.9,33:1.5,41:1.2,6:8.4},
+        63:{7.4:8.6,9:7.1,11:5.8,13.6:4.7,17:3.8,21:3,26:2.4,33:1.9,41:1.5,6:10.5},
+        75:{7.4:10.2,9:8.4,11:6.8,13.6:5.6,17:4.5,21:3.6,26:2.9,33:2.3,41:1.8,6:12.5},
+        90:{7.4:12.2,9:10.1,11:8.2,13.6:6.7,17:5.4,21:4.3,26:3.5,33:2.7,41:2.2,6:15},
+        110:{7.4:14.9,9:12.3,11:10,13.6:8.1,17:6.6,21:5.3,26:4.2,33:3.3,41:2.7,6:18.4},
+        125:{7.4:16.9,9:14,11:11.4,13.6:9.2,17:7.4,21:6,26:4.8,33:3.8,41:3,6:20.9},
+        140:{7.4:19,9:15.7,11:12.7,13.6:10.3,17:8.3,21:6.7,26:5.4,33:4.2,41:3.4,6:23.4},
+        160:{7.4:21.7,9:17.9,11:14.6,13.6:11.8,17:9.5,21:7.7,26:6.2,33:4.8,41:3.9,6:26.7},
+        180:{7.4:24.4,9:20.1,11:16.4,13.6:13.3,17:10.7,21:8.6,26:6.9,33:5.4,41:4.4,6:30},
+        200:{7.4:27.1,9:22.3,11:18.2,13.6:14.7,17:11.9,21:9.6,26:7.7,33:6,41:4.9,6:33.4},
+        225:{7.4:30.5,9:25.2,11:20.5,13.6:16.6,17:13.4,21:10.8,26:8.6,33:6.8,41:5.5,6:37.5},
+        250:{7.4:33.9,9:27.9,11:22.7,13.6:18.4,17:14.8,21:11.9,26:9.6,33:7.5,41:6.1,6:41.7},
+        280:{7.4:37.9,9:31.3,11:25.4,13.6:20.6,17:16.6,21:13.4,26:10.7,33:8.4,41:6.8,6:46.7},
+        315:{7.4:42.7,9:35.2,11:28.6,13.6:23.2,17:18.7,21:15,26:12.1,33:9.5,41:7.7,6:52.5},
+        355:{7.4:48.1,9:39.7,11:32.3,13.6:26.1,17:21.1,21:16.9,26:13.6,33:10.7,41:8.7,6:59.2},
+        400:{7.4:54.2,9:44.7,11:36.3,13.6:29.4,17:23.7,21:19.1,26:15.3,33:12,41:9.8,6:66.7},
+        450:{7.4:61,9:50.3,11:40.9,13.6:33.1,17:26.7,21:21.5,26:17.2,33:13.6,41:11,6:75},
+        500:{7.4:67.8,9:55.8,11:45.4,13.6:36.8,17:29.7,21:23.9,26:19.1,33:15.1,41:12.2,6:83.4}
+    };
+    const STRUCT_OD_DATA = {110:94,160:136,200:171,250:213,315:271,400:343,500:430,630:535,800:681,1000:851,1200:1035};
+    const STRUCT_ID_OUTER = {200:225,250:289,300:364,400:487,500:603,600:720,800:964,1000:1150,1200:1399,1400:1632};
+    const DUCTILE_SIZES = {98:80.0,118:100.0,144:126.0,170:152.0,222:203.4,274:254.4,326:305.6,378:352.6,429:402.8,532:504.0,635:605.2,738:704.4,842:806.6,945:907.8,1048:1009.0};
+    
+    // гидравлические элементы
+    const GRAV_TABLE = [
+        {hd:0.1, r:0.0635, ratio:0.254, k0:0.0409},{hd:0.2, r:0.1206, ratio:0.4824, k0:0.1118},{hd:0.3, r:0.1709, ratio:0.6836, k0:0.1982},
+        {hd:0.4, r:0.2142, ratio:0.8568, k0:0.2934},{hd:0.5, r:0.25, ratio:1, k0:0.3927},{hd:0.6, r:0.2776, ratio:1.1104, k0:0.492},
+        {hd:0.7, r:0.2962, ratio:1.1848, k0:0.5872},{hd:0.8, r:0.3042, ratio:1.2168, k0:0.6736},{hd:0.9, r:0.298, ratio:1.192, k0:0.7445},{hd:1, r:0.25, ratio:1, k0:0.7854}
+    ];
+    function getGravParams(hd) {
+        if(hd<=0.1) return GRAV_TABLE[0];
+        if(hd>=1) return GRAV_TABLE[9];
+        for(let i=0;i<9;i++) if(hd>=GRAV_TABLE[i].hd && hd<=GRAV_TABLE[i+1].hd){
+            let t=(hd-GRAV_TABLE[i].hd)/(GRAV_TABLE[i+1].hd-GRAV_TABLE[i].hd);
+            return {
+                r: GRAV_TABLE[i].r+t*(GRAV_TABLE[i+1].r-GRAV_TABLE[i].r),
+                ratio: GRAV_TABLE[i].ratio+t*(GRAV_TABLE[i+1].ratio-GRAV_TABLE[i].ratio),
+                k0: GRAV_TABLE[i].k0+t*(GRAV_TABLE[i+1].k0-GRAV_TABLE[i].k0)
+            };
+        }
+        return GRAV_TABLE[0];
+    }
+    
+    // Расчёт для чугуна (метод Павловского)
+    const CAST_N = 0.014;
+    function velocityAndFlowDuctile(innerMM, slope, hd) {
+        const Dm = innerMM/1000;
+        const gp = getGravParams(hd);
+        const R = (gp.ratio * Dm)/4;
+        const exponent = 0.666 - 0.014 * Math.sqrt(R);
+        const velocity = (1/CAST_N) * Math.pow(R, exponent) * Math.sqrt(slope);
+        const area = gp.k0 * Math.pow(Dm,2);
+        const flowLPS = velocity * area * 1000;
+        return {velocity, flowLPS};
+    }
+    
+    // для полимеров (ПЭ100, структурированные) – по СП399
+    function velocityAndFlowPolymer(innerMM, slope, hd) {
+        const D = innerMM/1000;
+        const gp = getGravParams(hd);
+        const n = 0.014;
+        const R_full = D/4;
+        const alpha = 0.3124 * Math.pow(n, 0.0516);
+        const lambdaN = 0.2 * Math.pow(n/(1000*4*R_full), alpha);
+        const V_full = Math.sqrt((8*9.81*R_full*slope)/lambdaN);
+        const b = 2.0;
+        const velocity = V_full * Math.pow(gp.ratio, (1+alpha)/b);
+        const area = gp.k0 * Math.pow(D,2);
+        const flowLPS = velocity * area * 1000;
+        return {velocity, flowLPS};
+    }
+    
+    // Глобальный объект текущей трубы
+    let currentPipe = { inner: null, outer: null, material: 'PE', name: '—' };
+    
+    // --- Инициализация интерфейса ---
+    function updatePipeConfig() {
+        let type = document.getElementById('pipe-type').value;
+        document.getElementById('pe100-block').style.display = 'none';
+        document.getElementById('struct-block').style.display = 'none';
+        document.getElementById('ductile-block').style.display = 'none';
+        if(type === 'pe100') {
+            document.getElementById('pe100-block').style.display = 'block';
+            initPe100Selects();
+            updatePe100BySelect();
+        } else if(type === 'struct') {
+            document.getElementById('struct-block').style.display = 'block';
+            initStructSelects();
+            updateStructFromSize();
+        } else if(type === 'ductile') {
+            document.getElementById('ductile-block').style.display = 'block';
+            initDuctileSelect();
+            updateDuctileByOD();
+        }
+        updateSummary();
+    }
+    
+    function initPe100Selects() {
+        let ods = Object.keys(PE100_WALL).map(Number).sort((a,b)=>a-b);
+        let sdrList = [6,7.4,9,11,13.6,17,21,26,33,41];
+        let odSel = document.getElementById('pe100-diameter');
+        let sdrSel = document.getElementById('pe100-sdr');
+        odSel.innerHTML = '<option value="">Выберите</option>' + ods.map(d=>`<option value="${d}">${d} мм</option>`).join('');
+        sdrSel.innerHTML = '<option value="">Выберите SDR</option>' + sdrList.map(s=>`<option value="${s}">SDR ${s}</option>`).join('');
+    }
+    function updatePe100BySelect() {
+        let od = parseFloat(document.getElementById('pe100-diameter').value);
+        let sdr = parseFloat(document.getElementById('pe100-sdr').value);
+        if(od && sdr && PE100_WALL[od] && PE100_WALL[od][sdr]) {
+            let wall = PE100_WALL[od][sdr];
+            let inner = od - 2*wall;
+            currentPipe = { inner, outer: od, material: 'PE', name: `ПЭ100 Ø${od} мм SDR ${sdr}` };
+            document.getElementById('pe100-wall').value = wall.toFixed(1);
+            document.getElementById('pe100-id-manual').value = '';
+        } else { if(od && sdr) currentPipe = null; else currentPipe = null; }
+        updateSummary();
+    }
+    function updatePe100Manual() {
+        let idManual = parseFloat(document.getElementById('pe100-id-manual').value);
+        if(!isNaN(idManual) && idManual>0) {
+            let sdr = parseFloat(document.getElementById('pe100-sdr').value);
+            if(sdr && sdr>0) {
+                let outer = idManual * sdr/(sdr-2);
+                currentPipe = { inner: idManual, outer, material: 'PE', name: `ПЭ100 (внутр. ${idManual} мм, SDR ${sdr})` };
+                document.getElementById('pe100-wall').value = ((outer-idManual)/2).toFixed(1);
+            } else {
+                currentPipe = { inner: idManual, outer: idManual+30, material: 'PE', name: `ПЭ100 ручной Dвн=${idManual} мм` };
+            }
+        } else if(!document.getElementById('pe100-diameter').value) { currentPipe = null; }
+        updateSummary();
+    }
+    
+    function initStructSelects() {
+        let series = document.getElementById('struct-series').value;
+        let sizes = series === 'OD' ? Object.keys(STRUCT_OD_DATA).map(Number).sort((a,b)=>a-b) : Object.keys(STRUCT_ID_OUTER).map(Number).sort((a,b)=>a-b);
+        let sel = document.getElementById('struct-size');
+        sel.innerHTML = '<option value="">Выберите</option>' + sizes.map(v=>`<option value="${v}">${v} мм</option>`).join('');
+    }
+    function updateStructSeries() { initStructSelects(); updateStructFromSize(); }
+    function updateStructFromSize() {
+        let series = document.getElementById('struct-series').value;
+        let val = parseFloat(document.getElementById('struct-size').value);
+        if(!val) { currentPipe = null; updateSummary(); return; }
+        if(series === 'OD') {
+            let inner = STRUCT_OD_DATA[val];
+            if(inner) currentPipe = { inner, outer: val, material: 'PE', name: `Структур. DN/OD ${val} мм (Dвн=${inner} мм)` };
+        } else {
+            let outer = STRUCT_ID_OUTER[val];
+            if(outer) currentPipe = { inner: val, outer, material: 'PE', name: `Структур. DN/ID ${val} мм (Dнар=${outer} мм)` };
+        }
+        updateSummary();
+    }
+    
+    function initDuctileSelect() {
+        let ods = Object.keys(DUCTILE_SIZES).map(Number).sort((a,b)=>a-b);
+        let sel = document.getElementById('ductile-od');
+        sel.innerHTML = '<option value="">Выберите</option>' + ods.map(od=>`<option value="${od}">${od} мм (вн. ${DUCTILE_SIZES[od].toFixed(1)})</option>`).join('');
+    }
+    function updateDuctileByOD() {
+        let od = parseFloat(document.getElementById('ductile-od').value);
+        if(od && DUCTILE_SIZES[od]) {
+            let inner = DUCTILE_SIZES[od];
+            currentPipe = { inner, outer: od, material: 'DUCTILE', name: `Чугун ВЧШГ DN ${od} мм (внутр.${inner.toFixed(1)})` };
+            document.getElementById('ductile-id-manual').value = '';
+        } else { currentPipe = null; }
+        updateSummary();
+    }
+    function updateDuctileManual() {
+        let idMan = parseFloat(document.getElementById('ductile-id-manual').value);
+        if(!isNaN(idMan) && idMan>0) {
+            currentPipe = { inner: idMan, outer: idMan+20, material: 'DUCTILE', name: `Чугун (ручной Dвн=${idMan} мм)` };
+        } else if(!document.getElementById('ductile-od').value) currentPipe = null;
+        updateSummary();
+    }
+    
+    function updateSummary() {
+        let span = document.getElementById('selected-pipe-summary');
+        if(currentPipe && currentPipe.inner > 0) span.innerHTML = `${currentPipe.name} (Dвн = ${currentPipe.inner.toFixed(1)} мм)`;
+        else span.innerHTML = '❌ Труба не выбрана — укажите параметры';
+    }
+    
+    // расчёт по режимам
+    function calculateFlowBySlope() {
+        if(!currentPipe || !currentPipe.inner) { alert('Сначала выберите трубу!'); return; }
+        let filling = parseFloat(document.getElementById('filling-value').value);
+        let slope = parseFloat(document.getElementById('slope-value').value);
+        if(isNaN(filling) || isNaN(slope)) { alert('Введите наполнение и уклон'); return; }
+        if(filling<0.1) filling=0.1; if(filling>0.95) filling=0.95;
+        let v, q;
+        if(currentPipe.material === 'DUCTILE') {
+            let res = velocityAndFlowDuctile(currentPipe.inner, slope, filling);
+            v = res.velocity; q = res.flowLPS;
+        } else {
+            let res = velocityAndFlowPolymer(currentPipe.inner, slope, filling);
+            v = res.velocity; q = res.flowLPS;
+        }
+        document.getElementById('slope-pipe-name').innerHTML = currentPipe.name;
+        document.getElementById('slope-id').innerHTML = currentPipe.inner.toFixed(1) + ' мм';
+        document.getElementById('slope-velocity').innerHTML = v.toFixed(3) + ' м/с';
+        document.getElementById('slope-flow').innerHTML = q.toFixed(2) + ' л/с (' + (q*3.6).toFixed(2) + ' м³/ч)';
+        let warn = document.getElementById('warning-slope');
+        if(v < 0.7) { warn.style.display='block'; warn.innerHTML = `⚠️ Скорость ${v.toFixed(3)} м/с ниже рекомендуемой 0.7 м/с (заиливание).`; }
+        else if(v > 4) { warn.style.display='block'; warn.innerHTML = `⚠️ Скорость ${v.toFixed(3)} м/с выше 4 м/с (износ трубы).`; }
+        else warn.style.display='none';
+    }
+    
+    function calculateFillingByTarget() {
+        if(!currentPipe || !currentPipe.inner) { alert('Выберите трубу'); return; }
+        let targetQ = parseFloat(document.getElementById('target-flow').value);
+        let slope = parseFloat(document.getElementById('target-slope-fill').value);
+        if(isNaN(targetQ) || isNaN(slope)) { alert('Введите расход и уклон'); return; }
+        let func = (hd) => {
+            if(currentPipe.material === 'DUCTILE') return velocityAndFlowDuctile(currentPipe.inner, slope, hd).flowLPS;
+            else return velocityAndFlowPolymer(currentPipe.inner, slope, hd).flowLPS;
+        };
+        let low=0.1, high=0.95;
+        let qLow=func(low), qHigh=func(high);
+        if(targetQ <= qLow) {
+            document.getElementById('warning-target').style.display='block';
+            document.getElementById('warning-target').innerHTML = `⚠️ Расход ${targetQ} л/с меньше минимального при h/d=0.1 (${qLow.toFixed(2)} л/с). Занижен.`;
+            document.getElementById('target-filling').innerHTML = '0.10';
+            document.getElementById('target-velocity').innerHTML = velocityAndFlowPolymer(currentPipe.inner, slope, 0.1).velocity.toFixed(3)+' м/с';
+            document.getElementById('target-pipe-name').innerHTML = currentPipe.name;
+            document.getElementById('target-id').innerHTML = currentPipe.inner.toFixed(1)+' мм';
+            return;
+        }
+        if(targetQ >= qHigh) {
+            document.getElementById('warning-target').style.display='block';
+            document.getElementById('warning-target').innerHTML = `⚠️ Расход ${targetQ} л/с превышает максимальный при h/d=0.95 (${qHigh.toFixed(2)} л/с). Переполнение.`;
+            document.getElementById('target-filling').innerHTML = '0.95';
+            document.getElementById('target-velocity').innerHTML = velocityAndFlowPolymer(currentPipe.inner, slope, 0.95).velocity.toFixed(3)+' м/с';
+            document.getElementById('target-pipe-name').innerHTML = currentPipe.name;
+            document.getElementById('target-id').innerHTML = currentPipe.inner.toFixed(1)+' мм';
+            return;
+        }
+        let best=0.5;
+        for(let i=0;i<50;i++){
+            let mid=(low+high)/2;
+            let flowMid=func(mid);
+            if(Math.abs(flowMid-targetQ)<0.001) { best=mid; break; }
+            if(flowMid < targetQ) low=mid;
+            else high=mid;
+            best=(low+high)/2;
+        }
+        best = Math.min(0.95, Math.max(0.1, best));
+        let vel = (currentPipe.material === 'DUCTILE') ? velocityAndFlowDuctile(currentPipe.inner, slope, best).velocity : velocityAndFlowPolymer(currentPipe.inner, slope, best).velocity;
+        document.getElementById('target-pipe-name').innerHTML = currentPipe.name;
+        document.getElementById('target-id').innerHTML = currentPipe.inner.toFixed(1)+' мм';
+        document.getElementById('target-velocity').innerHTML = vel.toFixed(3)+' м/с';
+        document.getElementById('target-filling').innerHTML = best.toFixed(3);
+        document.getElementById('warning-target').style.display = 'none';
+    }
+    
+    window.onload = () => {
+        updatePipeConfig();
+    };
+</script>
+</body>
+</html>
