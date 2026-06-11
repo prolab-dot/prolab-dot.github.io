@@ -12,8 +12,11 @@
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
         .header { text-align: center; margin-bottom: 2rem; }
         .header h1 { display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap; font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #0f2b3d, #1e6f5c); background-clip: text; -webkit-background-clip: text; color: transparent; margin-bottom: 0.5rem; }
-        .header h1 i { font-size: 2.2rem; color: #1e6f5c; animation: fadeSlide 0.5s ease-out; }
-        @keyframes fadeSlide { from { opacity: 0; transform: translateX(-20px);} to { opacity: 1; transform: translateX(0);} }
+        .header h1 a { display: inline-block; line-height: 1; text-decoration: none; cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; }
+        .header h1 a:hover { transform: scale(1.05); filter: drop-shadow(0 0 8px rgba(30, 111, 92, 0.7)); }
+        .header h1 .calc-icon { display: inline-block; font-size: 2.2rem; color: #1e6f5c; opacity: 0; transform: translateX(-40px) scale(0.6); animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards, gentleGlow 0.4s ease-out 0.85s forwards; }
+        @keyframes calculatorPop { 0% { opacity: 0; transform: translateX(-45px) scale(0.5); } 40% { opacity: 0.8; transform: translateX(6px) scale(1.1); } 70% { transform: translateX(-2px) scale(1.02); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes gentleGlow { 0% { filter: drop-shadow(0 0 0 rgba(30, 111, 92, 0)); } 100% { filter: drop-shadow(0 0 6px rgba(30, 111, 92, 0.5)); } }
         .badge { background: #e6f7f2; color: #1e6f5c; border-radius: 40px; padding: 0.2rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 1rem; }
         .calc-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
         @media (max-width: 900px) { .calc-wrapper { grid-template-columns: 1fr; } }
@@ -44,7 +47,12 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1><i class="fas fa-calculator"></i><span>Расчет на прочность по СП 399.1325800.2018 (Приложение В)</span></h1>
+        <h1>
+            <a href="https://prolab-dot.github.io/" target="_blank" rel="noopener noreferrer" aria-label="На главную страницу">
+                <i class="fas fa-calculator calc-icon"></i>
+            </a>
+            <span>Расчет на прочность по СП 399.1325800.2018 (Приложение В)</span>
+        </h1>
         <p>Методика расчёта полимерных трубопроводов на прочность и устойчивость · Напорные, безнапорные, дренажные сети</p>
         <div class="badge"><i class="fas fa-microscope"></i> СП 399.1325800.2018 · формулы (В.1–В.3) + табл. В.1, В.2, В.3</div>
     </div>
