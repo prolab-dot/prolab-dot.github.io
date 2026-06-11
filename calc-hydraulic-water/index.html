@@ -4,213 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Гидравлический калькулятор НАПОРНЫХ труб | Расчёт потерь напора ПЭ100</title>
-    <meta name="description" content="Калькулятор только для напорных трубопроводов. Расчёт потерь напора, скорости потока, гидравлического уклона для ПЭ100 труб по ГОСТ Р 70628.2-2023.">
+    <meta name="description" content="Калькулятор для напорных трубопроводов. Расчёт потерь напора, скорости потока, гидравлического уклона для ПЭ100 труб по ГОСТ Р 70628.2-2023.">
     
-    <!-- Шрифты и иконки -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #eef2f9;
-            color: #1e293b;
-            line-height: 1.5;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        /* Карточка калькулятора */
-        .calculator-card {
-            background: white;
-            border-radius: 2rem;
-            padding: 2rem;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2edf2;
-            transition: all 0.2s;
-        }
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .card-header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #0b3b3f, #1f8a7c);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .card-header h1 i {
-            font-size: 2.2rem;
-            color: #1f8a7c;
-        }
-
-        .card-header p {
-            color: #4a5a6e;
-            margin-top: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .badge {
-            background: #e0f2f1;
-            display: inline-block;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #1f6e62;
-            margin-top: 0.8rem;
-        }
-
-        /* Поля ввода */
-        .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.6rem;
-            margin-bottom: 2rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            color: #2c3e50;
-            letter-spacing: -0.2px;
-        }
-
-        label i {
-            margin-right: 6px;
-            color: #1f8a7c;
-            width: 1.2rem;
-        }
-
-        input, select {
-            padding: 12px 16px;
-            border: 1.5px solid #dce5ec;
-            border-radius: 1.2rem;
-            font-size: 0.95rem;
-            font-family: 'Inter', monospace;
-            background: #ffffff;
-            transition: 0.2s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #1f8a7c;
-            box-shadow: 0 0 0 3px rgba(31, 138, 124, 0.2);
-        }
-
-        input[readonly] {
-            background-color: #f8fafc;
-            color: #1e2a3a;
-            font-weight: 500;
-        }
-
-        button {
-            background: #1f6e62;
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 3rem;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin: 1rem 0 0.5rem 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-
-        button:hover {
-            background: #0c4e44;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
-        }
-
-        /* Результаты */
-        .results-panel {
-            margin-top: 2rem;
-            background: #f9fdfe;
-            border-radius: 1.5rem;
-            padding: 1.2rem 1.5rem;
-            border: 1px solid #e2edf2;
-        }
-
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 12px 0;
-            border-bottom: 1px solid #e9edf2;
-        }
-
-        .result-row:last-child {
-            border-bottom: none;
-        }
-
-        .result-label {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
-
-        .result-value {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #1f6e62;
-            background: #eafaf8;
-            padding: 0.2rem 0.8rem;
-            border-radius: 2rem;
-        }
-
-        .note {
-            font-size: 0.75rem;
-            text-align: center;
-            margin-top: 1.8rem;
-            color: #5b6f82;
-            border-top: 1px solid #e2edf2;
-            padding-top: 1.2rem;
-        }
-
-        hr {
-            margin: 1rem 0;
-            border: none;
-            border-top: 1px dashed #cbdde6;
-        }
-
-        @media (max-width: 680px) {
-            .container { padding: 0; }
-            .calculator-card { padding: 1.5rem; }
-            .card-header h1 { font-size: 1.6rem; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #eef2f9; color: #1e293b; line-height: 1.5; padding: 2rem 1rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .calculator-card { background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1); border: 1px solid #e2edf2; }
+        .card-header { text-align: center; margin-bottom: 2rem; }
+        .card-header h1 { font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #0b3b3f, #1f8a7c); background-clip: text; -webkit-background-clip: text; color: transparent; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .card-header h1 a { display: inline-block; line-height: 1; text-decoration: none; cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; }
+        .card-header h1 a:hover { transform: scale(1.05); filter: drop-shadow(0 0 8px rgba(31, 138, 124, 0.7)); }
+        .card-header h1 i { display: inline-block; font-size: 2.2rem; color: #1f8a7c; opacity: 0; transform: translateX(-40px) scale(0.6); animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards, gentleGlow 0.4s ease-out 0.85s forwards; pointer-events: none; }
+        @keyframes calculatorPop { 0% { opacity: 0; transform: translateX(-45px) scale(0.5); } 40% { opacity: 0.8; transform: translateX(6px) scale(1.1); } 70% { transform: translateX(-2px) scale(1.02); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes gentleGlow { 0% { filter: drop-shadow(0 0 0 rgba(31, 138, 124, 0)); } 100% { filter: drop-shadow(0 0 6px rgba(31, 138, 124, 0.5)); } }
+        .card-header p { color: #4a5a6e; margin-top: 0.5rem; font-size: 1rem; }
+        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.6rem; margin-bottom: 2rem; }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; color: #2c3e50; }
+        label i { margin-right: 6px; color: #1f8a7c; width: 1.2rem; }
+        input, select { padding: 12px 16px; border: 1.5px solid #dce5ec; border-radius: 1.2rem; font-size: 0.95rem; font-family: 'Inter', monospace; background: #ffffff; transition: 0.2s; }
+        input:focus, select:focus { outline: none; border-color: #1f8a7c; box-shadow: 0 0 0 3px rgba(31, 138, 124, 0.2); }
+        input[readonly] { background-color: #f8fafc; color: #1e2a3a; font-weight: 500; }
+        button { background: #1f6e62; color: white; border: none; padding: 14px 20px; border-radius: 3rem; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; margin: 1rem 0 0.5rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        button:hover { background: #0c4e44; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.1); }
+        .pdf-export-btn { background: #2c3e66; margin-top: 0.5rem; }
+        .pdf-export-btn:hover { background: #1e2a4a; }
+        .results-panel { margin-top: 2rem; background: #f9fdfe; border-radius: 1.5rem; padding: 1.2rem 1.5rem; border: 1px solid #e2edf2; }
+        .result-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: 1px solid #e9edf2; flex-wrap: wrap; gap: 10px; }
+        .result-row:last-child { border-bottom: none; }
+        .result-label { font-weight: 600; color: #2c3e50; font-size: 0.95rem; }
+        .result-value { font-weight: 800; font-size: 1.2rem; color: #1f6e62; background: #eafaf8; padding: 0.2rem 0.8rem; border-radius: 2rem; word-break: break-word; text-align: right; }
+        .note { font-size: 0.75rem; text-align: center; margin-top: 1.8rem; color: #5b6f82; border-top: 1px solid #e2edf2; padding-top: 1.2rem; }
+        @media (max-width: 680px) { .container { padding: 0; } .calculator-card { padding: 1.5rem; } .card-header h1 { font-size: 1.6rem; } .card-header h1 i { font-size: 1.8rem; } .result-value { font-size: 1rem; } }
     </style>
 </head>
 <body>
@@ -218,30 +47,26 @@
     <div class="calculator-card">
         <div class="card-header">
             <h1>
-                <i class="fas fa-water-pump"></i> 
-                <span>Напорные трубы ПЭ100</span>
+                <a href="https://prolab-dot.github.io/" target="_blank" rel="noopener noreferrer" aria-label="На главную страницу">
+                    <i class="fas fa-calculator"></i>
+                </a>
+                <span>Онлайн калькулятор для систем водоснабжения</span>
             </h1>
-            <p>Гидравлический расчёт по ГОСТ Р 70628.2-2023 • потери напора • скорость потока</p>
-            <div class="badge"><i class="fas fa-charging-station"></i> Только напорные трубопроводы</div>
+            <p>Гидравлический расчёт водопровода в соответствии с таблицами Шевелева, СП 399.1325800.2018</p>
         </div>
 
-        <!-- Блок выбора трубы -->
         <div class="input-grid">
             <div class="input-group">
-                <label><i class="fas fa-ruler-combined"></i> Наружный диаметр (мм)</label>
-                <select id="press-diameter-select">
-                    <option value="">Выберите диаметр</option>
-                </select>
+                <label><i class="far fa-circle"></i> Наружный диаметр (мм)</label>
+                <select id="press-diameter-select"><option value="">Выберите диаметр</option></select>
             </div>
             <div class="input-group">
-                <label><i class="fas fa-chart-simple"></i> SDR (коэффициент)</label>
-                <select id="press-sdr-select">
-                    <option value="">Выберите SDR</option>
-                </select>
+                <label><i class="fas fa-grip-vertical"></i> SDR</label>
+                <select id="press-sdr-select"><option value="">Выберите SDR</option></select>
             </div>
             <div class="input-group">
-                <label><i class="fas fa-circle"></i> Внутр. диаметр (мм) ручной</label>
-                <input type="number" id="press-id-manual" step="0.5" placeholder="Опционально, переопределяет">
+                <label><i class="fas fa-circle"></i> Внутр. диаметр (мм)</label>
+                <input type="number" id="press-id-manual" step="0.5" placeholder="Авто или вручную">
             </div>
         </div>
 
@@ -251,62 +76,35 @@
                 <input type="number" id="press-temp" value="15" step="1">
             </div>
             <div class="input-group">
-                <label><i class="fas fa-tachometer-alt"></i> Расход Q (л/с)</label>
+                <label><i class="fas fa-tint"></i> Расход Q (л/с)</label>
                 <input type="number" id="press-flow" value="12.5" step="1">
             </div>
             <div class="input-group">
-                <label><i class="fas fa-road"></i> Длина участка L (м)</label>
+                <label><i class="fas fa-ruler"></i> Длина участка L (м)</label>
                 <input type="number" id="press-length" value="150" step="10">
             </div>
         </div>
 
         <div class="input-group" style="margin-bottom: 0.5rem;">
-            <label><i class="fas fa-chart-line"></i> Геометрия трубы (справочно)</label>
-            <input type="text" id="press-wall-thickness" class="readonly-gray" readonly placeholder="Толщина стенки (мм)" style="background:#f5f9fc;">
+            <label><i class="fas fa-layer-group"></i> Толщина стенки трубопровода</label>
+            <input type="text" id="press-wall-thickness" readonly placeholder="Толщина стенки (мм)" style="background:#f5f9fc;">
         </div>
 
-        <button onclick="calculatePressure()">
-            <i class="fas fa-calculator"></i> РАССЧИТАТЬ ПОТЕРИ НАПОРА
-        </button>
+        <button onclick="calculatePressure()"><i class="fas fa-calculator"></i> РАССЧИТАТЬ</button>
+        <button id="pdfBtn" class="pdf-export-btn"><i class="fas fa-file-pdf"></i> Экспорт расчета в PDF</button>
 
-        <!-- Блок результатов -->
         <div class="results-panel" id="pressure-results">
-            <div class="result-row">
-                <span class="result-label"><i class="fas fa-arrows-spin"></i> Наружный диаметр:</span>
-                <span class="result-value" id="press-od">—</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label"><i class="fas fa-dot-circle"></i> Внутренний диаметр:</span>
-                <span class="result-value" id="press-id">—</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label"><i class="fas fa-weight-hanging"></i> SDR / Толщина стенки:</span>
-                <span class="result-value" id="press-wall-val">—</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label"><i class="fas fa-wind"></i> Скорость потока V:</span>
-                <span class="result-value" id="press-velocity">—</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label"><i class="fas fa-mountain"></i> Гидравлический уклон (1000i):</span>
-                <span class="result-value" id="press-1000i">—</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label"><i class="fas fa-tint"></i> Потери напора на участке Δh:</span>
-                <span class="result-value" id="press-loss">—</span>
-            </div>
+            <div class="result-row"><span class="result-label"><i class="far fa-circle"></i> Наружный диаметр:</span><span class="result-value" id="press-od">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-circle"></i> Внутренний диаметр:</span><span class="result-value" id="press-id">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-grip-vertical"></i> SDR / Толщина стенки:</span><span class="result-value" id="press-wall-val">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-wind"></i> Скорость потока V:</span><span class="result-value" id="press-velocity">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-mountain"></i> Потери напора по длине:</span><span class="result-value" id="press-loss-only">—</span></div>
         </div>
-        <div class="note">
-            <i class="fas fa-database"></i> Расчёт основан на формулах Дарси-Вейсбаха, эквивалентная шероховатость для ПЭ100 = 0.014 мм. 
-            Учтена вязкость воды в зависимости от температуры. Данные по толщинам стенок — по ГОСТ Р 70628.2-2023.
-        </div>
+        <div class="note"><i class="fas fa-database"></i> Расчёт основан на формулах Дарси-Вейсбаха, эквивалентная шероховатость для ПЭ100 = 0.014 мм. Учтена вязкость воды в зависимости от температуры. Данные по толщинам стенок — по ГОСТ Р 70628.2-2023.</div>
     </div>
 </div>
 
 <script>
-    // --------------------------------------------------------------
-    // ПОЛНЫЙ СПРАВОЧНИК ТОЛЩИН СТЕНОК ПЭ100 (наружный диаметр / SDR)
-    // --------------------------------------------------------------
     const PE100_WALL_THICKNESS = {
         16: {7.4: 2.2, 9: 1.8, 11: 1.5, 13.6: 1.2, 17: 1.0, 21: 0.8, 26: 0.6, 33: 0.5, 41: 0.4, 6: 2.7},
         20: {7.4: 2.7, 9: 2.2, 11: 1.8, 13.6: 1.5, 17: 1.2, 21: 1.0, 26: 0.8, 33: 0.6, 41: 0.5, 6: 3.4},
@@ -340,72 +138,80 @@
         1200: {7.4: 162.7, 9: 133.8, 11: 108.9, 13.6: 88.2, 17: 71.1, 21: 57.2, 26: 45.9, 33: 36.2, 41: 29.3, 6: 200.1}
     };
 
-    // Глобальные переменные выбора
-    let selectedOD = null;
-    let selectedSDR = null;
+    let selectedOD = null, selectedSDR = null, lastCalculationData = null;
 
-    // Заполнение выпадающих списков
     function initPressureSelectors() {
         const ods = Object.keys(PE100_WALL_THICKNESS).map(Number).sort((a,b) => a-b);
         const sdrList = [6, 7.4, 9, 11, 13.6, 17, 21, 26, 33, 41];
-        
         const odSelect = document.getElementById('press-diameter-select');
         odSelect.innerHTML = '<option value="">Выберите наружный диаметр</option>';
-        ods.forEach(od => {
-            odSelect.innerHTML += `<option value="${od}">${od} мм</option>`;
-        });
-        
+        ods.forEach(od => { odSelect.innerHTML += `<option value="${od}">${od} мм</option>`; });
         const sdrSelect = document.getElementById('press-sdr-select');
-        sdrSelect.innerHTML = '<option value="">Выберите SDR (коэффициент)</option>';
-        sdrList.forEach(sdr => {
-            sdrSelect.innerHTML += `<option value="${sdr}">SDR ${sdr}</option>`;
-        });
+        sdrSelect.innerHTML = '<option value="">Выберите SDR</option>';
+        sdrList.forEach(sdr => { sdrSelect.innerHTML += `<option value="${sdr}">SDR ${sdr}</option>`; });
     }
 
-    // Обновление толщины стенки при выборе
-    function updateWallThickness() {
-        const od = selectedOD;
-        const sdr = selectedSDR;
+    function updateGeometry() {
+        const od = selectedOD, sdr = selectedSDR;
         const wallInput = document.getElementById('press-wall-thickness');
+        const innerManualInput = document.getElementById('press-id-manual');
         if (od && sdr && PE100_WALL_THICKNESS[od] && PE100_WALL_THICKNESS[od][sdr]) {
-            wallInput.value = PE100_WALL_THICKNESS[od][sdr].toFixed(1) + " мм";
+            const wallThick = PE100_WALL_THICKNESS[od][sdr];
+            wallInput.value = wallThick.toFixed(1) + " мм";
+            const innerDiam = od - 2 * wallThick;
+            if (!innerManualInput.hasAttribute('data-manual-override')) innerManualInput.value = innerDiam.toFixed(2);
         } else {
             wallInput.value = "— (выберите параметры)";
+            if (!innerManualInput.hasAttribute('data-manual-override')) innerManualInput.value = "";
         }
     }
 
-    // События выбора
     document.getElementById('press-diameter-select').addEventListener('change', (e) => {
         selectedOD = e.target.value ? parseFloat(e.target.value) : null;
-        updateWallThickness();
+        document.getElementById('press-id-manual').removeAttribute('data-manual-override');
+        updateGeometry();
     });
     document.getElementById('press-sdr-select').addEventListener('change', (e) => {
         selectedSDR = e.target.value ? parseFloat(e.target.value) : null;
-        updateWallThickness();
+        document.getElementById('press-id-manual').removeAttribute('data-manual-override');
+        updateGeometry();
+    });
+    
+    const innerManualField = document.getElementById('press-id-manual');
+    innerManualField.addEventListener('input', () => {
+        const val = innerManualField.value;
+        if (val !== "" && !isNaN(parseFloat(val))) {
+            innerManualField.setAttribute('data-manual-override', 'true');
+            if (selectedSDR && !isNaN(parseFloat(val))) {
+                const idVal = parseFloat(val);
+                if (idVal > 0) {
+                    const odCalc = idVal * selectedSDR / (selectedSDR - 2);
+                    const wallCalc = (odCalc - idVal) / 2;
+                    document.getElementById('press-wall-thickness').value = wallCalc.toFixed(1) + " мм (ручн.)";
+                }
+            }
+        } else if (val === "") {
+            innerManualField.removeAttribute('data-manual-override');
+            if (selectedOD && selectedSDR && PE100_WALL_THICKNESS[selectedOD] && PE100_WALL_THICKNESS[selectedOD][selectedSDR]) {
+                const wallThick = PE100_WALL_THICKNESS[selectedOD][selectedSDR];
+                const innerDiam = selectedOD - 2 * wallThick;
+                innerManualField.value = innerDiam.toFixed(2);
+                document.getElementById('press-wall-thickness').value = wallThick.toFixed(1) + " мм";
+            }
+        }
     });
 
-    // ========== ГИДРАВЛИЧЕСКИЙ РАСЧЕТ (только напорные) ==========
-    // Коэффициент эквивалентной шероховатости для ПЭ100
-    const K_EQUIV_PE = 0.014;   // мм -> при переводе в метры
-
-    // Кинематическая вязкость воды (приближённо)
+    const K_EQUIV_PE = 0.014;
     function getViscosity(tempC) {
-        // упрощенная формула для диапазона 0-40°C
         if(tempC <= 10) return 1.31;
         if(tempC <= 20) return 1.01;
         if(tempC <= 30) return 0.80;
         return 0.66;
     }
-
-    // Число Рейнольдса
-    function calcReynolds(velocity, diamM, nu) {
-        return (velocity * diamM) / (nu / 1e6);
-    }
-
-    // Коэффициент гидравлического трения (итерация)
+    function calcReynolds(velocity, diamM, nu) { return (velocity * diamM) / (nu / 1e6); }
     function calcLambda(re, kEquivMm, diamM) {
         if (re <= 2000) return 64 / re;
-        let k = kEquivMm / 1000; // перевод в метры
+        let k = kEquivMm / 1000;
         let lambda = 0.02;
         for(let i = 0; i < 12; i++) {
             let f = -2 * Math.log10( (k / (3.7 * diamM)) + (2.51 / (re * Math.sqrt(lambda))) );
@@ -414,96 +220,158 @@
         }
         return lambda;
     }
-
-    // Главная функция расчета
+    
     function calculatePressure() {
-        // Получаем значения из UI
-        let odUser = selectedOD;
-        let sdrUser = selectedSDR;
+        let odUser = selectedOD, sdrUser = selectedSDR;
         let idManual = parseFloat(document.getElementById('press-id-manual').value);
         let flow = parseFloat(document.getElementById('press-flow').value);
         let length = parseFloat(document.getElementById('press-length').value);
         let temp = parseFloat(document.getElementById('press-temp').value);
-
-        if (isNaN(flow) || flow <= 0) {
-            alert("Введите корректный расход (л/с)");
-            return;
-        }
+        if (isNaN(flow) || flow <= 0) { alert("Введите корректный расход (л/с)"); return null; }
         if (isNaN(length) || length <= 0) length = 100;
         if (isNaN(temp)) temp = 15;
-
-        let innerDiam = null;
-        let outerDiam = null;
-        let sdrValue = sdrUser;
-        let wallThick = null;
-
-        // Приоритет: если вручную задан внутренний диаметр — используем его (ищем SDR и OD)
-        if (!isNaN(idManual) && idManual > 0 && sdrUser) {
+        let innerDiam = null, outerDiam = null, sdrValue = sdrUser, wallThick = null;
+        const isManualOverride = document.getElementById('press-id-manual').hasAttribute('data-manual-override');
+        if (isManualOverride && !isNaN(idManual) && idManual > 0 && sdrUser) {
             innerDiam = idManual;
             outerDiam = innerDiam * sdrUser / (sdrUser - 2);
-            wallThick = (outerDiam - innerDiam)/2;
-        }
-        else if (odUser && sdrUser && PE100_WALL_THICKNESS[odUser] && PE100_WALL_THICKNESS[odUser][sdrUser]) {
+            wallThick = (outerDiam - innerDiam) / 2;
+        } else if (odUser && sdrUser && PE100_WALL_THICKNESS[odUser] && PE100_WALL_THICKNESS[odUser][sdrUser]) {
             outerDiam = odUser;
             sdrValue = sdrUser;
             wallThick = PE100_WALL_THICKNESS[odUser][sdrUser];
             innerDiam = outerDiam - 2 * wallThick;
-        }
-        else {
-            alert("Пожалуйста, выберите полноценную пару: наружный диаметр и SDR, либо укажите внутренний диаметр и SDR.");
-            return;
-        }
-
-        if (!innerDiam || innerDiam <= 0) {
-            alert("Невозможно определить внутренний диаметр. Проверьте данные трубы.");
-            return;
-        }
-
-        // Расчет площади и скорости
+        } else { alert("Пожалуйста, выберите пару: наружный диаметр и SDR, либо укажите внутренний диаметр и SDR."); return null; }
+        if (!innerDiam || innerDiam <= 0) { alert("Невозможно определить геометрию трубы."); return null; }
+        
         const innerM = innerDiam / 1000;
         const area = Math.PI * innerM * innerM / 4;
         const flowM3s = flow / 1000;
         const velocity = flowM3s / area;
-
         const nu = getViscosity(temp);
         const re = calcReynolds(velocity, innerM, nu);
         const lambda = calcLambda(re, K_EQUIV_PE, innerM);
         const g = 9.81;
-        const i = lambda * velocity * velocity / (2 * g * innerM);   // гидравлический уклон (м/м)
-        const i1000 = i * 1000;           // ‰ или м/км
-        const lossMeters = i * length;    // потери напора на участке (м)
+        const i = lambda * velocity * velocity / (2 * g * innerM);
+        const lossMeters = i * length;
 
-        // Отображаем результаты
         document.getElementById('press-od').innerHTML = outerDiam.toFixed(1) + " мм";
         document.getElementById('press-id').innerHTML = innerDiam.toFixed(2) + " мм";
-        const wallInfo = (wallThick ? wallThick.toFixed(1) + " мм" : "—");
-        document.getElementById('press-wall-val').innerHTML = `SDR ${sdrValue} / стена ${wallInfo}`;
-        document.getElementById('press-velocity').innerHTML = velocity.toFixed(2) + " м/с";
-        document.getElementById('press-1000i').innerHTML = i1000.toFixed(2) + " м/км";
-        document.getElementById('press-loss').innerHTML = lossMeters.toFixed(2) + " м (вод. ст.)";
-
-        // Дополнительно предупреждение о скорости
-        const velWarning = (velocity > 4) ? " ⚠️ высокая скорость" : (velocity < 0.5 ? " ⚠️ низкая скорость" : "");
-        if (velWarning) {
-            const velSpan = document.getElementById('press-velocity');
-            velSpan.innerHTML += `<span style="font-size:0.7rem; margin-left:6px; color:#c2410c;">${velWarning}</span>`;
-        }
+        const sdrDisplay = sdrValue !== null ? sdrValue.toString().replace(/\.0$/, '') : '?';
+        document.getElementById('press-wall-val').innerHTML = `SDR${sdrDisplay}/${wallThick.toFixed(1)}мм`;
+        let velocityDisplay = velocity.toFixed(2) + " м/с";
+        if (velocity > 4) velocityDisplay += "<span style='font-size:0.7rem; color:#c2410c;'> ⚠️ высокая</span>";
+        else if (velocity < 0.5) velocityDisplay += "<span style='font-size:0.7rem; color:#c2410c;'> ⚠️ низкая</span>";
+        document.getElementById('press-velocity').innerHTML = velocityDisplay;
+        document.getElementById('press-loss-only').innerHTML = lossMeters.toFixed(2) + " м";
+        
+        lastCalculationData = {
+            outerDiam: outerDiam.toFixed(1), innerDiam: innerDiam.toFixed(2), sdrDisplay: sdrDisplay, wallThick: wallThick.toFixed(1),
+            velocity: velocity.toFixed(2), lossMeters: lossMeters.toFixed(2), flow: flow, length: length, temp: temp,
+            sdrValue: sdrValue, re: re.toFixed(0), lambda: lambda.toFixed(5), i: i.toExponential(5),
+            innerM: (innerDiam/1000).toFixed(4), area: area.toFixed(6), flowM3s: flowM3s.toFixed(4), g: g
+        };
+        return lastCalculationData;
     }
-
-    // Запуск при загрузке
-    window.onload = () => {
-        initPressureSelectors();
-        // Сброс ручного ввода диаметра для согласованности
-        document.getElementById('press-id-manual').addEventListener('input', () => {
-            // визуально переопределяем толщину стенки (опционально)
-            let idVal = parseFloat(document.getElementById('press-id-manual').value);
-            if(!isNaN(idVal) && idVal > 0 && selectedSDR) {
-                let odCalc = idVal * selectedSDR / (selectedSDR - 2);
-                let wall = (odCalc - idVal)/2;
-                document.getElementById('press-wall-thickness').value = wall.toFixed(1) + " мм (ручн.)";
-            }
-        });
-    };
+    
+    function exportToPDF() {
+        if (!lastCalculationData) { alert('Сначала выполните расчёт'); return; }
+        const d = lastCalculationData;
+        const nuValue = d.temp <= 10 ? 1.31 : (d.temp <= 20 ? 1.01 : (d.temp <= 30 ? 0.80 : 0.66));
+        const printHtml = `<!DOCTYPE html>
+        <html><head><meta charset="UTF-8"><title>Гидравлический расчет трубопровода ПЭ100</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:'Times New Roman',Times,serif; font-size:14pt; padding:15mm 12mm; background:white; color:#000000;}
+            h1{font-size:26pt; font-weight:bold; color:#1f8a7c; border-bottom:2px solid #1f8a7c; margin-bottom:12pt; padding-bottom:6pt;}
+            h2{font-size:20pt; font-weight:bold; margin:16pt 0 8pt 0; color:#0f4c3f;}
+            h3{font-size:17pt; font-weight:bold; margin:12pt 0 5pt 0; color:#1f6e62;}
+            table{width:100%; border-collapse:collapse; margin:10pt 0; font-size:13pt;}
+            td,th{border:1px solid #8ba0b0; padding:6pt 10pt; vertical-align:top;}
+            th{background:#e6f7f2; font-weight:700;}
+            .formula-block{background:#f8fafc; padding:10pt 14pt; border-left:4px solid #1f8a7c; margin:10pt 0; font-family:'Times New Roman',Times,serif; font-size:13pt; line-height:1.5;}
+            p, .note{font-size:13pt;}
+            strong{font-weight:700;}
+        </style>
+        </head>
+        <body>
+        <h1>Гидравлический расчет напорного трубопровода из ПЭ100</h1>
+        <p><strong>Дата расчёта:</strong> ${new Date().toLocaleString()}</p>
+        
+        <h2>1. Исходные данные</h2>
+        <table><thead><tr><th>Параметр</th><th>Значение</th><th>Обозначение</th></tr></thead>
+        <tbody>
+            <tr><td>Наружный диаметр</td><td>${d.outerDiam} мм</td><td>D<sub>н</sub></td></tr>
+            <tr><td>Внутренний диаметр</td><td>${d.innerDiam} мм</td><td>d<sub>вн</sub></td>
+            </tr>
+            <tr><td>SDR / Толщина стенки</td><td>SDR${d.sdrDisplay} / ${d.wallThick} мм</td><td>SDR, e</td>
+            <tr>
+            <tr><td>Расход воды</td><td>${d.flow} л/с</td><td>Q</td>
+            </tr>
+            <tr><td>Длина участка</td><td>${d.length} м</td><td>L</td>
+            </tr>
+            <tr><td>Температура воды</td><td>${d.temp} °C</td><td>T</td>
+            </tr>
+        </tbody>
+    </table>
+        
+        <h2>2. Расчётные формулы и промежуточные значения</h2>
+        
+        <h3>2.1 Геометрические параметры</h3>
+        <div class="formula-block">
+            <strong>Площадь живого сечения:</strong> A = π·d²/4<br>
+            A = π · (${d.innerDiam}/1000)² / 4 = π · (${d.innerM})² / 4 = <strong>${d.area} м²</strong>
+        </div>
+        
+        <h3>2.2 Гидравлические параметры</h3>
+        <div class="formula-block">
+            <strong>Скорость потока:</strong> V = Q / A<br>
+            Q = ${d.flow} л/с = ${d.flowM3s} м³/с<br>
+            V = ${d.flowM3s} / ${d.area} = <strong>${d.velocity} м/с</strong>
+        </div>
+        
+        <div class="formula-block">
+            <strong>Число Рейнольдса:</strong> Re = V·d / ν<br>
+            Кинематическая вязкость при T = ${d.temp}°C: ν = ${nuValue} × 10⁻⁶ м²/с<br>
+            Re = ${d.velocity} · ${d.innerM} / (${nuValue}×10⁻⁶) = <strong>${d.re}</strong><br>
+            Режим потока: ${d.re > 4000 ? 'турбулентный' : (d.re < 2000 ? 'ламинарный' : 'переходный')}
+        </div>
+        
+        <div class="formula-block">
+            <strong>Коэффициент гидравлического трения λ (формула Альтшуля):</strong><br>
+            λ = 0,11·(k<sub>э</sub>/d + 68/Re)<sup>0,25</sup><br>
+            Эквивалентная шероховатость ПЭ100: k<sub>э</sub> = 0,014 мм<br>
+            k<sub>э</sub>/d = 0,014 / ${d.innerDiam} = ${(0.014/parseFloat(d.innerDiam)).toExponential(4)}<br>
+            λ = <strong>${d.lambda}</strong>
+        </div>
+        
+        <div class="formula-block">
+            <strong>Гидравлический уклон i (формула Дарси-Вейсбаха):</strong><br>
+            i = λ · V² / (2·g·d)<br>
+            i = ${d.lambda} · (${d.velocity})² / (2 · 9.81 · ${(parseFloat(d.innerDiam)/1000).toFixed(4)}) = <strong>${d.i}</strong>
+        </div>
+        
+        <h2>3. Потери напора</h2>
+        <div class="formula-block">
+            <strong>Потери напора по длине:</strong> h<sub>дл</sub> = i · L<br>
+            h<sub>дл</sub> = ${d.i} · ${d.length} = <strong>${d.lossMeters} м</strong>
+        </div>
+        </body></html>`;
+        
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0px';
+        iframe.style.height = '0px';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(printHtml);
+        doc.close();
+        setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1500); }, 400);
+    }
+    
+    window.onload = function() { initPressureSelectors(); document.getElementById('pdfBtn').addEventListener('click', exportToPDF); };
 </script>
 </body>
 </html>
