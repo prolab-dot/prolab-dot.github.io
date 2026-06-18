@@ -7,7 +7,7 @@
     <meta name="description" content="Расчёт расхода, скорости и наполнения для самотечных труб: ПЭ100, структурированные (ГОСТ 54475), ВЧШГ (чугун). Бесплатный онлайн-расчёт по СП 399.">
     <meta name="keywords" content="самотечные трубы, безнапорные, канализация, расход, скорость, наполнение, гидравлический калькулятор, таблицы Лукиных, СП 399">
     
-    <!-- Yandex.Metrika counter (опционально, оставлен по желанию) -->
+    <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -58,10 +58,35 @@
             color: transparent;
             margin-bottom: 0.5rem;
         }
+        .header h1 a {
+            display: inline-block;
+            line-height: 1;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .header h1 a:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 8px rgba(30, 111, 92, 0.7));
+        }
         .header h1 i {
-            font-size: 2rem;
+            display: inline-block;
+            font-size: 2.2rem;
             color: #1e6f5c;
-            opacity: 1;
+            opacity: 0;
+            transform: translateX(-40px) scale(0.6);
+            animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards, gentleGlow 0.4s ease-out 0.85s forwards;
+            pointer-events: none;
+        }
+        @keyframes calculatorPop {
+            0% { opacity: 0; transform: translateX(-45px) scale(0.5); }
+            40% { opacity: 0.8; transform: translateX(6px) scale(1.1); }
+            70% { transform: translateX(-2px) scale(1.02); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        @keyframes gentleGlow {
+            0% { filter: drop-shadow(0 0 0 rgba(30, 111, 92, 0)); }
+            100% { filter: drop-shadow(0 0 8px rgba(30, 111, 92, 0.5)); }
         }
         .header p {
             font-size: 1rem;
@@ -111,6 +136,14 @@
             font-size: 0.85rem;
             color: #334155;
         }
+        label i {
+            margin-right: 6px;
+            color: #1e6f5c;
+            width: 1.2rem;
+        }
+        label .fa-slope {
+            margin-right: 6px;
+        }
         input, select {
             padding: 12px 14px;
             border: 1.5px solid #e2e8f0;
@@ -150,6 +183,12 @@
         button:hover {
             background: #0f4c3f;
             transform: translateY(-2px);
+        }
+        .pdf-export-btn {
+            background: #2c3e66;
+        }
+        .pdf-export-btn:hover {
+            background: #1e2a4a;
         }
         .results {
             margin-top: 1.8rem;
@@ -215,70 +254,119 @@
             display: inline-block;
             margin-left: 8px;
         }
+        .card-title.no-icon i {
+            display: none;
+        }
+        .card-title.no-icon {
+            border-left-color: transparent;
+            padding-left: 0;
+        }
+        .fa-fill-half {
+            position: relative;
+            display: inline-block;
+            font-size: 1.2rem;
+            width: 1.2rem;
+            color: #1e6f5c;
+            transform: rotate(-90deg);
+        }
+        .fa-fill-half:before {
+            content: "◐";
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+        .fa-slope {
+            display: inline-block;
+            font-size: 1.2rem;
+            width: 1.2rem;
+            color: #1e6f5c;
+            margin-right: 6px;
+        }
+        .fa-slope:before {
+            content: "―";
+            font-size: 1.6rem;
+            font-weight: 300;
+            line-height: 1;
+        }
+        label .fa-slope {
+            margin-right: 6px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn-group button {
+            flex: 1;
+            min-width: 200px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h1>
-            <i class="fas fa-water"></i>
-            <span>Гидравлика самотечных труб</span>
+            <a href="https://prolab-dot.github.io/" target="_blank" rel="noopener noreferrer" aria-label="На главную страницу">
+                <i class="fas fa-calculator"></i>
+            </a>
+            <span>Онлайн калькулятор для систем водоотведения</span>
         </h1>
-        <p>Расчёт расхода, скорости и наполнения для безнапорных трубопроводов (канализация, ливнёвка) по СП 399. ПЭ100, структурированные трубы ГОСТ 54475, чугун ВЧШГ.</p>
+        <p>Гидравлический расчёт канализации в соответствии с таблицами Лукиных, СП 399.1325800.2018</p>
     </div>
 
-    <!-- Карточка: выбор трубы (всё в одном компактно) -->
+    <!-- Карточка: выбор трубы -->
     <div class="card">
         <div class="card-title"><i class="fas fa-pipe-valve"></i> Параметры трубопровода</div>
         <div class="grid-2col">
             <div class="input-group">
-                <label>Тип / ГОСТ трубы</label>
+                <label><i class="fas fa-tags"></i> Тип / ГОСТ трубы</label>
                 <select id="pipe-type" onchange="updatePipeConfig()">
-                    <option value="pe100" selected>ГОСТ Р 70628.2-2023 (ПЭ100, напорная, но самотечный расчёт)</option>
+                    <option value="pe100" selected>ГОСТ Р 70628.2-2023 (ПЭ100)</option>
                     <option value="struct">ГОСТ Р 54475-2011 (Структурированная, DN/OD или DN/ID)</option>
                     <option value="ductile">ГОСТ ISO 2531-2022 (ВЧШГ, чугун)</option>
                 </select>
             </div>
-            <!-- динамические блоки для каждого типа -->
         </div>
         
         <div id="pe100-block">
             <div class="grid-2col">
-                <div class="input-group"><label>Наружный диаметр (мм)</label><select id="pe100-diameter" onchange="updatePe100BySelect()"></select></div>
-                <div class="input-group"><label>SDR</label><select id="pe100-sdr" onchange="updatePe100BySelect()"></select></div>
-                <div class="input-group"><label>Внутр. диаметр (ручной, мм)</label><input type="number" id="pe100-id-manual" placeholder="Вручную" step="1" oninput="updatePe100Manual()"></div>
+                <div class="input-group"><label><i class="far fa-circle"></i> Наружный диаметр (мм)</label><select id="pe100-diameter" onchange="updatePe100BySelect()"></select></div>
+                <div class="input-group"><label><i class="fas fa-grip-vertical"></i> SDR</label><select id="pe100-sdr" onchange="updatePe100BySelect()"></select></div>
+                <div class="input-group"><label><i class="fas fa-circle"></i> Внутр. диаметр (ручной, мм)</label><input type="number" id="pe100-id-manual" placeholder="Вручную" step="1" oninput="updatePe100Manual()"></div>
             </div>
             <div class="grid-2col">
-                <div class="input-group"><label>Толщина стенки (мм, расч.)</label><input type="text" id="pe100-wall" readonly class="readonly-gray" placeholder="авто"></div>
+                <div class="input-group"><label><i class="fas fa-layer-group"></i> Толщина стенки (мм, расч.)</label><input type="text" id="pe100-wall" readonly class="readonly-gray" placeholder="авто"></div>
             </div>
         </div>
 
         <div id="struct-block" style="display:none;">
             <div class="grid-2col">
-                <div class="input-group"><label>Серия (система)</label><select id="struct-series" onchange="updateStructSeries()"><option value="OD">DN/OD (наружный → внутренний)</option><option value="ID">DN/ID (внутренний → наружный)</option></select></div>
-                <div class="input-group"><label>Типоразмер (мм)</label><select id="struct-size" onchange="updateStructFromSize()"></select></div>
+                <div class="input-group"><label><i class="fas fa-exchange-alt"></i> Серия (система)</label><select id="struct-series" onchange="updateStructSeries()"><option value="OD">DN/OD (наружный → внутренний)</option><option value="ID">DN/ID (внутренний → наружный)</option></select></div>
+                <div class="input-group"><label><i class="fas fa-ruler"></i> Типоразмер (мм)</label><select id="struct-size" onchange="updateStructFromSize()"></select></div>
             </div>
         </div>
 
         <div id="ductile-block" style="display:none;">
             <div class="grid-2col">
-                <div class="input-group"><label>Наружный диаметр (мм)</label><select id="ductile-od" onchange="updateDuctileByOD()"></select></div>
-                <div class="input-group"><label>Внутр. диаметр (ручной, мм)</label><input type="number" id="ductile-id-manual" placeholder="или вручную" step="0.1" oninput="updateDuctileManual()"></div>
+                <div class="input-group"><label><i class="far fa-circle"></i> Наружный диаметр (мм)</label><select id="ductile-od" onchange="updateDuctileByOD()"></select></div>
+                <div class="input-group"><label><i class="fas fa-circle"></i> Внутр. диаметр (ручной, мм)</label><input type="number" id="ductile-id-manual" placeholder="или вручную" step="0.1" oninput="updateDuctileManual()"></div>
             </div>
         </div>
         
         <div class="info-note"><i class="fas fa-info-circle"></i> Выбранная труба: <span id="selected-pipe-summary">—</span></div>
     </div>
 
-    <!-- Режим 1: Расход по уклону и наполнению -->
+    <!-- Режим 1 -->
     <div class="card">
-        <div class="card-title"><i class="fas fa-tachometer-alt"></i> Режим 1: Расход воды при заданных наполнении и уклоне</div>
+        <div class="card-title no-icon">Режим 1: Расчет расхода и скорости при заданных наполнении и уклоне</div>
         <div class="grid-2col">
-            <div class="input-group"><label>Наполнение h/d (0.10 … 0.95)</label><input type="number" id="filling-value" value="0.50" step="0.01" min="0.1" max="0.95"></div>
-            <div class="input-group"><label>Уклон трубы i (например, 0.005 = 5‰)</label><input type="number" id="slope-value" value="0.005" step="0.001"></div>
-            <div class="input-group"><label>Температура воды (°C)</label><input type="number" id="temp-value" value="15" readonly style="background:#f1f5f9;" title="Фиксировано для простоты"></div>
+            <div class="input-group"><label><span class="fa-fill-half"></span> Наполнение h/d (0.10 … 0.95)</label><input type="number" id="filling-value" value="0.50" step="0.01" min="0.1" max="0.95"></div>
+            <div class="input-group"><label><span class="fa-slope"></span> Уклон трубы</label><input type="number" id="slope-value" value="0.005" step="0.001"></div>
+            <div class="input-group"><label><i class="fas fa-thermometer-half"></i> Температура воды (°C)</label><input type="number" id="temp-value" value="15" step="1"></div>
         </div>
-        <button onclick="calculateFlowBySlope()"><i class="fas fa-calculator"></i> Рассчитать расход и скорость</button>
+        <div class="btn-group">
+            <button onclick="calculateFlowBySlope()"><i class="fas fa-calculator"></i> Рассчитать расход и скорость</button>
+            <button id="pdfBtn1" class="pdf-export-btn"><i class="fas fa-file-pdf"></i> Экспорт в PDF</button>
+        </div>
         <div id="slope-results" class="results">
             <div class="result-item"><span class="result-label">Тип трубы:</span><span class="result-value" id="slope-pipe-name">—</span></div>
             <div class="result-item"><span class="result-label">Внутренний диаметр:</span><span class="result-value" id="slope-id">—</span></div>
@@ -288,14 +376,17 @@
         <div id="warning-slope" class="warning" style="display:none;"></div>
     </div>
 
-    <!-- Режим 2: Наполнение по расходу и уклону -->
+    <!-- Режим 2 -->
     <div class="card">
-        <div class="card-title"><i class="fas fa-percent"></i> Режим 2: Подбор наполнения по расходу</div>
+        <div class="card-title no-icon">Режим 2: Расчет наполнения и скорости при заданных расходе и уклоне</div>
         <div class="grid-2col">
-            <div class="input-group"><label>Целевой расход (л/с)</label><input type="number" id="target-flow" value="20" step="1" placeholder="л/с"></div>
-            <div class="input-group"><label>Уклон i (0.005 = 5‰)</label><input type="number" id="target-slope-fill" value="0.005" step="0.001"></div>
+            <div class="input-group"><label><i class="fas fa-tint"></i> Целевой расход (л/с)</label><input type="number" id="target-flow" value="20" step="1" placeholder="л/с"></div>
+            <div class="input-group"><label><span class="fa-slope"></span> Уклон трубы</label><input type="number" id="target-slope-fill" value="0.005" step="0.001"></div>
         </div>
-        <button onclick="calculateFillingByTarget()"><i class="fas fa-chart-line"></i> Рассчитать наполнение h/d</button>
+        <div class="btn-group">
+            <button onclick="calculateFillingByTarget()"><i class="fas fa-calculator"></i> Рассчитать наполнение и скорость</button>
+            <button id="pdfBtn2" class="pdf-export-btn"><i class="fas fa-file-pdf"></i> Экспорт в PDF</button>
+        </div>
         <div id="target-results" class="results">
             <div class="result-item"><span class="result-label">Тип трубы:</span><span class="result-value" id="target-pipe-name">—</span></div>
             <div class="result-item"><span class="result-label">Внутренний диаметр:</span><span class="result-value" id="target-id">—</span></div>
@@ -306,12 +397,12 @@
     </div>
 
     <footer>
-        <p>© 2025 · Гидравлический калькулятор самотечных труб · Расчёт по СП 399.1325800.2018, метод Павловского для чугуна, обобщённые зависимости для полимеров. Данные не покидают ваш браузер.</p>
+        <p>© 2026 · Гидравлический калькулятор самотечных труб · Расчёт по СП 399.1325800.2018, метод Павловского для чугуна, обобщённые зависимости для полимеров. Данные не покидают ваш браузер.</p>
     </footer>
 </div>
 
 <script>
-    // ---------- ДАННЫЕ СОРТАМЕНТА (полностью как в исходнике, адаптировано) ----------
+    // ---------- ДАННЫЕ СОРТАМЕНТА ----------
     const PE100_WALL = {
         16:{7.4:2.2,9:1.8,11:1.5,13.6:1.2,17:1,21:0.8,26:0.6,33:0.5,41:0.4,6:2.7},
         20:{7.4:2.7,9:2.2,11:1.8,13.6:1.5,17:1.2,21:1,26:0.8,33:0.6,41:0.5,6:3.4},
@@ -392,7 +483,9 @@
     
     // Глобальный объект текущей трубы
     let currentPipe = { inner: null, outer: null, material: 'PE', name: '—' };
-    
+    let lastSlopeData = null;
+    let lastTargetData = null;
+
     // --- Инициализация интерфейса ---
     function updatePipeConfig() {
         let type = document.getElementById('pipe-type').value;
@@ -504,6 +597,7 @@
         if(!currentPipe || !currentPipe.inner) { alert('Сначала выберите трубу!'); return; }
         let filling = parseFloat(document.getElementById('filling-value').value);
         let slope = parseFloat(document.getElementById('slope-value').value);
+        let temp = parseFloat(document.getElementById('temp-value').value) || 15;
         if(isNaN(filling) || isNaN(slope)) { alert('Введите наполнение и уклон'); return; }
         if(filling<0.1) filling=0.1; if(filling>0.95) filling=0.95;
         let v, q;
@@ -522,6 +616,19 @@
         if(v < 0.7) { warn.style.display='block'; warn.innerHTML = `⚠️ Скорость ${v.toFixed(3)} м/с ниже рекомендуемой 0.7 м/с (заиливание).`; }
         else if(v > 4) { warn.style.display='block'; warn.innerHTML = `⚠️ Скорость ${v.toFixed(3)} м/с выше 4 м/с (износ трубы).`; }
         else warn.style.display='none';
+        
+        lastSlopeData = {
+            pipeName: currentPipe.name,
+            innerDiam: currentPipe.inner.toFixed(1),
+            filling: filling.toFixed(2),
+            slope: slope.toFixed(4),
+            velocity: v.toFixed(3),
+            flow: q.toFixed(2),
+            flowM3h: (q*3.6).toFixed(2),
+            material: currentPipe.material,
+            temp: temp,
+            mode: 'slope'
+        };
     }
     
     function calculateFillingByTarget() {
@@ -535,44 +642,148 @@
         };
         let low=0.1, high=0.95;
         let qLow=func(low), qHigh=func(high);
+        let targetFilling, targetVelocity;
         if(targetQ <= qLow) {
             document.getElementById('warning-target').style.display='block';
             document.getElementById('warning-target').innerHTML = `⚠️ Расход ${targetQ} л/с меньше минимального при h/d=0.1 (${qLow.toFixed(2)} л/с). Занижен.`;
-            document.getElementById('target-filling').innerHTML = '0.10';
-            document.getElementById('target-velocity').innerHTML = velocityAndFlowPolymer(currentPipe.inner, slope, 0.1).velocity.toFixed(3)+' м/с';
-            document.getElementById('target-pipe-name').innerHTML = currentPipe.name;
-            document.getElementById('target-id').innerHTML = currentPipe.inner.toFixed(1)+' мм';
-            return;
-        }
-        if(targetQ >= qHigh) {
+            targetFilling = 0.10;
+            targetVelocity = velocityAndFlowPolymer(currentPipe.inner, slope, 0.1).velocity.toFixed(3);
+        } else if(targetQ >= qHigh) {
             document.getElementById('warning-target').style.display='block';
             document.getElementById('warning-target').innerHTML = `⚠️ Расход ${targetQ} л/с превышает максимальный при h/d=0.95 (${qHigh.toFixed(2)} л/с). Переполнение.`;
-            document.getElementById('target-filling').innerHTML = '0.95';
-            document.getElementById('target-velocity').innerHTML = velocityAndFlowPolymer(currentPipe.inner, slope, 0.95).velocity.toFixed(3)+' м/с';
-            document.getElementById('target-pipe-name').innerHTML = currentPipe.name;
-            document.getElementById('target-id').innerHTML = currentPipe.inner.toFixed(1)+' мм';
-            return;
+            targetFilling = 0.95;
+            targetVelocity = velocityAndFlowPolymer(currentPipe.inner, slope, 0.95).velocity.toFixed(3);
+        } else {
+            let best=0.5;
+            for(let i=0;i<50;i++){
+                let mid=(low+high)/2;
+                let flowMid=func(mid);
+                if(Math.abs(flowMid-targetQ)<0.001) { best=mid; break; }
+                if(flowMid < targetQ) low=mid;
+                else high=mid;
+                best=(low+high)/2;
+            }
+            best = Math.min(0.95, Math.max(0.1, best));
+            targetFilling = best;
+            targetVelocity = (currentPipe.material === 'DUCTILE') ? velocityAndFlowDuctile(currentPipe.inner, slope, best).velocity.toFixed(3) : velocityAndFlowPolymer(currentPipe.inner, slope, best).velocity.toFixed(3);
+            document.getElementById('warning-target').style.display = 'none';
         }
-        let best=0.5;
-        for(let i=0;i<50;i++){
-            let mid=(low+high)/2;
-            let flowMid=func(mid);
-            if(Math.abs(flowMid-targetQ)<0.001) { best=mid; break; }
-            if(flowMid < targetQ) low=mid;
-            else high=mid;
-            best=(low+high)/2;
-        }
-        best = Math.min(0.95, Math.max(0.1, best));
-        let vel = (currentPipe.material === 'DUCTILE') ? velocityAndFlowDuctile(currentPipe.inner, slope, best).velocity : velocityAndFlowPolymer(currentPipe.inner, slope, best).velocity;
         document.getElementById('target-pipe-name').innerHTML = currentPipe.name;
         document.getElementById('target-id').innerHTML = currentPipe.inner.toFixed(1)+' мм';
-        document.getElementById('target-velocity').innerHTML = vel.toFixed(3)+' м/с';
-        document.getElementById('target-filling').innerHTML = best.toFixed(3);
-        document.getElementById('warning-target').style.display = 'none';
+        document.getElementById('target-velocity').innerHTML = targetVelocity + ' м/с';
+        document.getElementById('target-filling').innerHTML = targetFilling.toFixed(3);
+        
+        lastTargetData = {
+            pipeName: currentPipe.name,
+            innerDiam: currentPipe.inner.toFixed(1),
+            targetQ: targetQ.toFixed(2),
+            slope: slope.toFixed(4),
+            filling: targetFilling.toFixed(3),
+            velocity: targetVelocity,
+            material: currentPipe.material,
+            mode: 'target'
+        };
     }
     
-    window.onload = () => {
+    // === PDF экспорт ===
+    function exportToPDF(mode) {
+        let data = mode === 'slope' ? lastSlopeData : lastTargetData;
+        if (!data) { alert('Сначала выполните расчёт'); return; }
+        let title = mode === 'slope' ? 'Расчет расхода и скорости (Режим 1)' : 'Расчет наполнения и скорости (Режим 2)';
+        
+        let rows = [];
+        let formulaRows = [];
+        let fillingDesc = '';
+        
+        if (mode === 'slope') {
+            rows = [
+                ['Тип трубы', data.pipeName],
+                ['Внутренний диаметр', data.innerDiam + ' мм'],
+                ['Наполнение h/d (заданное)', data.filling],
+                ['Уклон', data.slope],
+                ['Температура', data.temp + ' °C']
+            ];
+            formulaRows = [
+                ['Скорость потока V', data.velocity + ' м/с'],
+                ['Расход Q', data.flow + ' л/с (' + data.flowM3h + ' м³/ч)']
+            ];
+            fillingDesc = `заданного наполнения h/d = ${data.filling}`;
+        } else {
+            rows = [
+                ['Тип трубы', data.pipeName],
+                ['Внутренний диаметр', data.innerDiam + ' мм'],
+                ['Целевой расход (заданный)', data.targetQ + ' л/с'],
+                ['Уклон', data.slope]
+            ];
+            formulaRows = [
+                ['Наполнение h/d (расчётное)', data.filling],
+                ['Скорость потока V', data.velocity + ' м/с']
+            ];
+            fillingDesc = `полученного наполнения h/d = ${data.filling} (решением уравнения Q(h/d) = Q<sub>зад</sub> методом половинного деления)`;
+        }
+        
+        let printHtml = `<!DOCTYPE html>
+        <html><head><meta charset="UTF-8"><title>Гидравлический расчет самотечных труб</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:'Times New Roman',Times,serif; font-size:14pt; padding:15mm 12mm; background:white; color:#000000;}
+            h1{font-size:26pt; font-weight:bold; color:#1e6f5c; border-bottom:2px solid #1e6f5c; margin-bottom:12pt; padding-bottom:6pt;}
+            h2{font-size:20pt; font-weight:bold; margin:16pt 0 8pt 0; color:#0f4c3f;}
+            h3{font-size:17pt; font-weight:bold; margin:12pt 0 5pt 0; color:#1e6f5c;}
+            table{width:100%; border-collapse:collapse; margin:10pt 0; font-size:13pt;}
+            td,th{border:1px solid #8ba0b0; padding:6pt 10pt; vertical-align:top;}
+            th{background:#e6f7f2; font-weight:700;}
+            .formula-block{background:#f8fafc; padding:10pt 14pt; border-left:4px solid #1e6f5c; margin:10pt 0; font-size:13pt; line-height:1.6;}
+            p, .note{font-size:13pt;}
+            strong{font-weight:700;}
+        </style>
+        </head>
+        <body>
+        <h1>Гидравлический расчет самотечного трубопровода</h1>
+        <p><strong>Дата расчёта:</strong> ${new Date().toLocaleString()}</p>
+        <h2>${title}</h2>
+        
+        <h2>1. Исходные данные</h2>
+        <table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
+        <tbody>`;
+        rows.forEach(r => { printHtml += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`; });
+        printHtml += `</tbody></table>
+        
+        <h2>2. Расчётные формулы и промежуточные значения</h2>
+        <div class="formula-block">
+            <strong>Гидравлические элементы потока:</strong><br>
+            Для ${fillingDesc} определены:<br>
+            &nbsp;&nbsp;• гидравлический радиус R = (ω/χ) · D / 4<br>
+            &nbsp;&nbsp;• отношение скоростей V / V<sub>полн</sub> = f(h/d)<br>
+            &nbsp;&nbsp;• относительная площадь потока ω/ω<sub>полн</sub> = f(h/d)
+        </div>
+        <div class="formula-block">
+            <strong>Скорость потока:</strong> V = C · √(R · i)
+            ${mode === 'slope' ? '<br><strong>Расход:</strong> Q = V · ω' : ''}
+        </div>
+        <table><thead><tr><th>Результат</th><th>Значение</th></tr></thead>
+        <tbody>`;
+        formulaRows.forEach(r => { printHtml += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`; });
+        printHtml += `</tbody></table>
+        </body></html>`;
+        
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0px';
+        iframe.style.height = '0px';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(printHtml);
+        doc.close();
+        setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1500); }, 400);
+    }
+    
+    window.onload = function() {
         updatePipeConfig();
+        document.getElementById('pdfBtn1').addEventListener('click', function() { exportToPDF('slope'); });
+        document.getElementById('pdfBtn2').addEventListener('click', function() { exportToPDF('target'); });
     };
 </script>
 </body>
