@@ -2,349 +2,762 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    
-    <!-- SEO мета-теги для Яндекса и Google -->
-    <title>Инженерные калькуляторы | Гидравлика, прочность трубопроводов</title>
-    <meta name="description" content="Онлайн расчёты: гидравлика водоснабжения и водоотведения, прочность полимерных труб по СП 399.1325800.2018, устойчивость и всплытие. Бесплатно, без установки.">
-    <meta name="keywords" content="гидравлический расчет, водоснабжение, водоотведение, таблицы Шевелева, таблицы Лукиных, СП 399.1325800.2018, прочность труб, расчет трубопроводов, устойчивость труб, всплытие колодцев, инженерный калькулятор онлайн">
-    <meta name="robots" content="index, follow">
-    <meta name="yandex" content="index, follow">
-    <link rel="canonical" href="https://ваш-домен.ru/">
-    <meta property="og:title" content="Инженерные калькуляторы: гидравлика и прочность">
-    <meta property="og:description" content="Расчёт водоснабжения, водоотведения, прочности полимерных труб, устойчивости и всплытия. По нормативам РФ.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ваш-домен.ru/">
-    <meta property="og:image" content="https://ваш-домен.ru/preview.jpg"><!-- замените на реальную картинку 1200x630 -->
-    <meta name="twitter:card" content="summary_large_image">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Калькулятор всплытия трубопровода</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background: #f4f7fc;
             color: #1e293b;
             line-height: 1.5;
+            padding: 1.5rem 1rem;
         }
-
         .container {
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1.5rem;
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem 2rem 1.5rem;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.12);
+            border: 1px solid #e9edf4;
         }
-
         .header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e9edf4;
+            padding-bottom: 1.2rem;
         }
-
         .header h1 {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
             flex-wrap: wrap;
-            font-size: 2.5rem;
+            font-size: 2.0rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #0f2b3d, #1e6f5c);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 0.75rem;
+            color: #0b2b3d;
         }
-
-        /* Иконка калькулятора: эффектная анимация с задержкой */
-        .header h1 i {
+        .header h1 .icon-wrapper {
             display: inline-block;
-            font-size: 2.5rem;
+            line-height: 1;
+            cursor: default;
+        }
+        .header h1 .icon-wrapper i {
+            display: inline-block;
+            font-size: 2.2rem;
             color: #1e6f5c;
-            background: none;
-            -webkit-background-clip: unset;
-            background-clip: unset;
             opacity: 0;
             transform: translateX(-40px) scale(0.6);
-            animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards,
-                       gentleGlow 0.4s ease-out 0.85s forwards;
+            animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards, gentleGlow 0.4s ease-out 0.85s forwards;
+            pointer-events: none;
         }
-
         @keyframes calculatorPop {
-            0% {
-                opacity: 0;
-                transform: translateX(-45px) scale(0.5);
-            }
-            40% {
-                opacity: 0.8;
-                transform: translateX(6px) scale(1.1);
-            }
-            70% {
-                transform: translateX(-2px) scale(1.02);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateX(-45px) scale(0.5); }
+            40% { opacity: 0.8; transform: translateX(6px) scale(1.1); }
+            70% { transform: translateX(-2px) scale(1.02); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
         }
-
         @keyframes gentleGlow {
             0% { filter: drop-shadow(0 0 0 rgba(30, 111, 92, 0)); }
-            100% { filter: drop-shadow(0 0 6px rgba(30, 111, 92, 0.5)); }
+            100% { filter: drop-shadow(0 0 8px rgba(30, 111, 92, 0.5)); }
         }
-
         .header p {
-            font-size: 1.2rem;
             color: #475569;
-            max-width: 700px;
-            margin: 0 auto;
+            font-size: 0.95rem;
+            margin-top: 0.3rem;
         }
-
-        .category-section {
-            margin-bottom: 3rem;
+        .card {
+            background: #fafcff;
+            border-radius: 1.5rem;
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid #e2e8f0;
+            transition: 0.1s;
         }
-        .category-title {
-            font-size: 1.8rem;
+        .card:hover {
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+        }
+        .card-title {
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            border-left: 6px solid #1e6f5c;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #1e6f5c;
             padding-left: 1rem;
-            flex-wrap: wrap;
         }
-        .category-title i {
+        .card-title i {
             color: #1e6f5c;
-            font-size: 1.8rem;
+            width: 1.8rem;
         }
-
-        .cards-grid {
+        
+        /* Все поля в одной строке */
+        .grid-all-inline {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.8rem;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem 1.2rem;
         }
-        .calc-card {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            transform: translateY(18px);
-            animation: cardRise 0.45s ease forwards;
-            animation-delay: calc(0.08s * var(--order, 0) + 0.2s);
-        }
-        .calc-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
-            border-color: #cbd5e1;
-        }
-        @keyframes cardRise {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media (max-width: 1024px) {
+            .grid-all-inline {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
-        .cards-grid .calc-card:nth-child(1) { --order: 1; }
-        .cards-grid .calc-card:nth-child(2) { --order: 2; }
-        .cards-grid .calc-card:nth-child(3) { --order: 3; }
-        .cards-grid .calc-card:nth-child(4) { --order: 4; }
-
-        .card-icon {
-            font-size: 2.5rem;
-            color: #1e6f5c;
-            margin-bottom: 1rem;
+        @media (max-width: 650px) {
+            .grid-all-inline {
+                grid-template-columns: 1fr;
+            }
         }
-        .calc-card h3 {
-            font-size: 1.5rem;
+        
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem 1.8rem;
+        }
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.2rem 1.8rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            margin-bottom: 0.4rem;
+            color: #2c3e50;
+            line-height: 1.2;
         }
-        .calc-card p {
-            color: #475569;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
+        label i {
+            margin-right: 4px;
+            color: #1e6f5c;
+            width: 1.1rem;
+            transition: color 0.2s;
         }
-        .calc-card .btn {
+        label i.disabled {
+            color: #94a3b8 !important;
+        }
+        input, select {
+            padding: 10px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            background: white;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1e6f5c;
+            box-shadow: 0 0 0 3px rgba(30,111,92,0.15);
+        }
+        input[readonly] {
+            background: #f1f5f9;
+            color: #1e293b;
+            font-weight: 500;
+        }
+        input:disabled {
+            background: #f1f5f9 !important;
+            color: #94a3b8 !important;
+            border-color: #e2e8f0 !important;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1.2rem 0 0.5rem;
+        }
+        button {
+            background: #1e6f5c;
+            color: white;
+            border: none;
+            padding: 13px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            background: #1e6f5c;
-            color: white;
-            padding: 0.7rem 1.2rem;
-            border-radius: 2rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s;
-            width: fit-content;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.15s;
+            flex: 1 1 auto;
+            min-width: 180px;
         }
-        .calc-card .btn:hover {
+        button:hover {
             background: #0f4c3f;
+            transform: translateY(-2px);
         }
-
-        footer {
-            margin-top: 4rem;
-            text-align: center;
+        button:active {
+            transform: scale(0.97);
+        }
+        .btn-calc i {
+            font-size: 1.1rem;
+        }
+        .btn-pdf {
+            background: #2c3e66;
+        }
+        .btn-pdf:hover {
+            background: #1e2a4a;
+        }
+        .results {
+            margin-top: 1.5rem;
+            background: #f8fafc;
+            border-radius: 1.25rem;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #eef2f6;
+            transition: background 0.2s;
+        }
+        .results.flash {
+            background: #e6f7f2;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 6px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .result-value {
+            font-weight: 700;
+            color: #1e6f5c;
+        }
+        .result-value .formula-note {
+            font-weight: 400;
+            font-size: 0.75rem;
             color: #64748b;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 2rem;
+            display: block;
+            margin-top: 2px;
+        }
+        .result-value.stable {
+            color: #16a34a;
+        }
+        .result-value.unstable {
+            color: #dc2626;
+        }
+        .warning {
+            background: #fff9e6;
+            border-left: 5px solid #f59e0b;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            margin-top: 0.8rem;
+            color: #92400e;
             font-size: 0.9rem;
-            opacity: 0;
-            animation: subtleAppear 0.4s ease forwards;
-            animation-delay: 0.55s;
         }
-        @keyframes subtleAppear {
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .footnote {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-align: center;
+            margin-top: 1.2rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.2rem;
         }
-        @media (max-width: 700px) {
-            .container { padding: 1.5rem; }
-            .header h1 { font-size: 1.8rem; }
-            .header h1 i { font-size: 1.9rem; }
-            .category-title { font-size: 1.4rem; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .header p { font-size: 1rem; }
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            padding: 8px 0;
+            flex-wrap: wrap;
+        }
+        .radio-group label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #1e293b;
+        }
+        .radio-group input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1e6f5c;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
+        }
+        @media (max-width: 650px) {
+            .container { padding: 1.2rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.2rem; }
+            .radio-group { gap: 0.8rem; }
+            label { font-size: 0.85rem; }
+        }
+        .card-title.no-icon {
+            border-left: 5px solid #1e6f5c;
+            padding-left: 1rem;
+        }
+        .card-title.no-icon i {
+            display: none;
+        }
+        .temp-disabled-hint {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-top: 2px;
         }
     </style>
-
-    <!-- Структурированные данные JSON-LD для Яндекса и Google -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Инженерные калькуляторы",
-      "description": "Бесплатные онлайн расчёты для проектирования водоснабжения, водоотведения и прочности труб",
-      "url": "https://ваш-домен.ru/",
-      "inLanguage": "ru",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://ваш-домен.ru/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Гидравлический расчет водоснабжения",
-          "description": "Подбор диаметра, потери по длине по таблицам Шевелева и СП 399.1325800.2018",
-          "url": "https://ваш-домен.ru/calc-hydraulic-water/index.html"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Гидравлический расчет водоотведения",
-          "description": "Самотечные трубопроводы, уклоны, наполнение, скорость по таблицам Лукиных и СП 399",
-          "url": "https://ваш-домен.ru/calc-hydraulic-sewer/index.html"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Расчет трубопроводов на прочность",
-          "description": "Прочностной расчет полимерных труб по СП 399.1325800.2018",
-          "url": "https://ваш-домен.ru/calc-pipe-strength/index.html"
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": "Расчет трубопроводов на всплытие",
-          "description": "Проверка трубопроводов на всплытие по СП 399.1325800.2018, Приложение Д, Д.1",
-          "url": "https://ваш-домен.ru/calc-pipe-buoyancy/index.html"
-        }
-      ]
-    }
-    </script>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h1>
-            <i class="fas fa-calculator"></i>
-            <span>Инженерные расчёты</span>
+            <span class="icon-wrapper">
+                <i class="fas fa-calculator"></i>
+            </span>
+            <span>Расчёт трубопровода на всплытие</span>
         </h1>
-        <p>Онлайн расчеты для проектирования систем водоснабжения и водоотведения</p>
+        <p>По методике СП 399.1325800.2018, Приложение Д, Д.1</p>
     </div>
 
-    <!-- КАТЕГОРИЯ 1: Гидравлика -->
-    <div class="category-section">
-        <div class="category-title">
-            <i class="fas fa-water"></i>
-            <span>Гидравлические расчеты систем водоснабжения и водоотведения</span>
+    <!-- карточка ввода параметров -->
+    <div class="card">
+        <div class="card-title no-icon">Геометрия и условия</div>
+        
+        <!-- ВСЕ ПОЛЯ В ОДНУ СТРОКУ С ПОЛНЫМИ НАДПИСЯМИ -->
+        <div class="grid-all-inline">
+            <div class="input-group">
+                <label><i class="fas fa-circle"></i> Наружный диаметр D, мм</label>
+                <input type="number" id="diam-outer" value="315" step="1" min="100">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-circle-notch"></i> Внутренний диаметр d, мм</label>
+                <input type="number" id="diam-inner" value="277.6" step="0.1" min="50">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-arrow-down"></i> Глубина заложения до низа трубы H, м</label>
+                <input type="number" id="depth-H" value="2.5" step="0.1" min="0.5">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-tint"></i> Уровень грунтовых вод (расстояние от поверхности земли до уровня грунтовых вод) E, м</label>
+                <input type="number" id="water-level-E" value="1.8" step="0.1" min="0">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-weight-hanging"></i> Плотность материала трубы, кг/м³</label>
+                <input type="number" id="rho-pipe" value="1400" step="10">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-weight-hanging"></i> Плотность грунта (насыщ.), кг/м³</label>
+                <input type="number" id="rho-soil" value="1800" step="10">
+            </div>
         </div>
-        <div class="cards-grid">
-            <div class="calc-card">
-                <div class="card-icon"><i class="fas fa-faucet"></i></div>
-                <h3>Водоснабжение</h3>
-                <p>Подбор диаметра водопровода, расчет потерь по длине (в соответствии с таблицами Шевелева, СП 399.1325800.2018)</p>
-                <a href="calc-hydraulic-water/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
+
+        <!-- Температура и состояние трубы — отдельная строка -->
+        <div class="grid-3col" style="margin-top:0.8rem;">
+            <div class="input-group" id="temp-group">
+                <label for="temp-water">
+                    <i class="fas fa-thermometer-half" id="temp-icon"></i> 
+                    Температура воды, °C
+                </label>
+                <input type="number" id="temp-water" value="15" step="1" min="0" max="40">
+                <span class="temp-disabled-hint" id="temp-hint"></span>
             </div>
-            <div class="calc-card">
-                <div class="card-icon"><i class="fas fa-toilet"></i></div>
-                <h3>Водоотведение (самотечное)</h3>
-                <p>Гидравлический расчёт безнапорных трубопроводов, уклонов, наполнения, скорости потока (в соответствии с таблицами Лукиных, СП 399.1325800.2018)</p>
-                <a href="calc-hydraulic-sewer/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
+            <div class="input-group" style="grid-column: span 2;">
+                <label><i class="fas fa-fill-drip"></i> Состояние трубы</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="pipe-state" value="empty" checked onchange="toggleTempField(); calculateFloat(false);">
+                        <i class="fas fa-circle-o" style="color:#1e6f5c;"></i> Незаполненная (пустая)
+                    </label>
+                    <label>
+                        <input type="radio" name="pipe-state" value="filled" onchange="toggleTempField(); calculateFloat(false);">
+                        <i class="fas fa-circle" style="color:#1e6f5c;"></i> Заполненная (водой)
+                    </label>
+                </div>
             </div>
+        </div>
+        
+        <div class="info-note" style="margin-top:0.8rem; font-size:0.85rem; background:#f0f6fe; padding:0.5rem 1rem; border-radius:40px;">
+            <i class="fas fa-info-circle"></i> Коэффициент K = (H – E) / D (если K > 1, принимается K = 1)
         </div>
     </div>
 
-    <!-- КАТЕГОРИЯ 2: Прочность, устойчивость, всплытие -->
-    <div class="category-section">
-        <div class="category-title">
-            <i class="fas fa-hard-hat"></i>
-            <span>Расчет на прочность, устойчивость и всплытие трубопроводов, колодцев и емкостей</span>
+    <!-- результаты -->
+    <div class="card" style="background:#f9fcff;">
+        <div class="card-title no-icon">Результаты расчёта</div>
+        <div id="result-area" class="results">
+            <div class="result-item"><span class="result-label">Коэффициент K (зона затопления):</span><span class="result-value" id="k-value">—</span></div>
+            <div class="result-item"><span class="result-label">Состояние трубы:</span><span class="result-value" id="pipe-state-display">—</span></div>
+            <div class="result-item"><span class="result-label">Сила давления грунта F<sub>тр</sub>, Н:</span><span class="result-value" id="f-soil">—</span></div>
+            <div class="result-item"><span class="result-label">Сила от массы трубы F<sub>вт</sub>, Н:</span><span class="result-value" id="f-pipe-weight">—</span></div>
+            <div class="result-item"><span class="result-label">Сила всплытия (Архимеда) F<sub>А</sub>, Н:</span><span class="result-value" id="f-archimedes"><span>—</span><span class="formula-note" id="formula-note"></span></span></div>
+            <div class="result-item" style="border-bottom: 2px solid #bdd3e8; padding-bottom: 12px;"><span class="result-label"><strong>Условие устойчивости</strong> (F<sub>тр</sub> + F<sub>вт</sub> ≥ F<sub>А</sub>):</span><span class="result-value" id="stability-check">—</span></div>
+            <div class="result-item" style="background:#edf4fa; border-radius:0.8rem; margin-top:6px;"><span class="result-label">Запас (F<sub>тр</sub>+F<sub>вт</sub>) / F<sub>А</sub> :</span><span class="result-value" id="safety-factor">—</span></div>
         </div>
-        <div class="cards-grid">
-            <div class="calc-card">
-                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Расчет трубопроводов на прочность</h3>
-                <p>Прочностной расчет трубопроводов из полимерных материалов по СП 399.1325800.2018</p>
-                <a href="calc-pipe-strength/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="calc-card">
-                <div class="card-icon"><i class="fas fa-arrow-up"></i></div>
-                <h3>Расчет трубопроводов на всплытие</h3>
-                <p>Проверка трубопроводов на всплытие по СП 399.1325800.2018, Приложение Д, Д.1</p>
-                <a href="calc-pipe-buoyancy/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
-            </div>
+        <div id="warning-message" class="warning" style="display:none;"></div>
+        <div class="btn-group">
+            <button class="btn-calc" onclick="calculateFloat(true)"><i class="fas fa-calculator"></i> Выполнить расчёт</button>
+            <button id="pdfBtn" class="btn-pdf"><i class="fas fa-file-pdf"></i> Экспорт PDF</button>
         </div>
     </div>
 
-    <footer>
-        <p>© 2026 · Все расчёты интерактивны, работают в вашем браузере. Данные не покидают устройство.</p>
-    </footer>
+    <!-- Подвал -->
+    <div class="footnote">
+        <p>© 2026 · Расчёт по СП 399.1325800.2018 (Приложение Д, Д.1). Данные обрабатываются локально.</p>
+        <p style="margin-top:0.3rem;">
+            <i class="fas fa-drafting-compass"></i> 
+            Для незаполненных труб: F<sub>А</sub> = ρ<sub>воды</sub> · g · (π·d²/4) · h &nbsp;|&nbsp; 
+            Для заполненных труб: F<sub>А</sub> = ρ<sub>воды</sub> · g · (π·D²/4) · h
+        </p>
+    </div>
 </div>
 
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109466159', 'ym');
+<script>
+    // ----- Управление полем температуры -----
+    function toggleTempField() {
+        const pipeState = document.querySelector('input[name="pipe-state"]:checked').value;
+        const tempInput = document.getElementById('temp-water');
+        const tempIcon = document.getElementById('temp-icon');
+        const tempHint = document.getElementById('temp-hint');
+        
+        if (pipeState === 'empty') {
+            tempInput.disabled = true;
+            tempIcon.classList.add('disabled');
+            tempHint.textContent = '⏺ не используется для пустой трубы';
+        } else {
+            tempInput.disabled = false;
+            tempIcon.classList.remove('disabled');
+            tempHint.textContent = '';
+        }
+    }
 
-    ym(109466159, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    // ----- Функция обновления результатов -----
+    function updateResults(kValue, stateDisplay, fSoil, fPipeWeight, fArch, formulaNote, stabilityText, safetyFactorText, isStable, warningText) {
+        document.getElementById('k-value').textContent = kValue;
+        document.getElementById('pipe-state-display').textContent = stateDisplay;
+        document.getElementById('f-soil').textContent = fSoil;
+        document.getElementById('f-pipe-weight').textContent = fPipeWeight;
+        document.getElementById('f-archimedes').innerHTML = fArch + '<span class="formula-note" id="formula-note">' + formulaNote + '</span>';
+        
+        const stabilityEl = document.getElementById('stability-check');
+        stabilityEl.textContent = stabilityText;
+        stabilityEl.className = 'result-value ' + (isStable ? 'stable' : 'unstable');
+        
+        document.getElementById('safety-factor').textContent = safetyFactorText;
+        
+        const warnDiv = document.getElementById('warning-message');
+        if (warningText) {
+            warnDiv.style.display = 'block';
+            warnDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + warningText;
+        } else {
+            warnDiv.style.display = 'none';
+        }
+    }
+
+    // ----- ядро расчёта -----
+    function calculateFloat(flash = false) {
+        // чтение (диаметры в мм, переводим в м)
+        const D_mm = parseFloat(document.getElementById('diam-outer').value);
+        const d_mm = parseFloat(document.getElementById('diam-inner').value);
+        const D = D_mm / 1000;
+        const d = d_mm / 1000;
+        const H = parseFloat(document.getElementById('depth-H').value);
+        const E = parseFloat(document.getElementById('water-level-E').value);
+        const rhoPipe = parseFloat(document.getElementById('rho-pipe').value);
+        const rhoSoil = parseFloat(document.getElementById('rho-soil').value);
+        const tempC = parseFloat(document.getElementById('temp-water').value) || 15;
+
+        // Состояние трубы
+        const pipeState = document.querySelector('input[name="pipe-state"]:checked').value;
+
+        // валидация
+        if (!D_mm || !d_mm || !H || E === undefined || !rhoPipe || !rhoSoil) {
+            updateResults('—', '—', '—', '—', '—', '', '—', '—', false, '');
+            return;
+        }
+        if (D_mm <= 0 || d_mm <= 0 || H <= 0 || E < 0) {
+            alert('Диаметры и глубина должны быть > 0, уровень воды >= 0.');
+            return;
+        }
+        if (d_mm >= D_mm) {
+            alert('Внутренний диаметр d должен быть меньше наружного D.');
+            return;
+        }
+
+        // плотность воды от температуры (аппроксимация)
+        const rhoWater = 1000 * (1 - (tempC - 4) * 0.00007);
+
+        // --- K ---
+        let K = (H - E) / D;
+        let K_display = K;
+        let K_eff = K;
+        if (K > 1) {
+            K_eff = 1;
+        } else if (K < 0) {
+            K_eff = 0;
+        }
+        const kValue = K_display.toFixed(3) + (K_eff !== K_display && K_display > 1 ? ' → принят K = 1' : '');
+
+        const g = 9.81;
+
+        // 1. Сила давления грунта Fтр
+        let F_soil = 0;
+        if (H - E > 0) {
+            F_soil = rhoSoil * g * D * (H - E);
+        } else {
+            F_soil = 0;
+        }
+
+        // 2. Сила от массы трубы Fвт (вес трубы)
+        const areaWall = (Math.PI / 4) * (D * D - d * d);
+        const F_pipe_weight = rhoPipe * g * areaWall; // Н/м
+
+        // 3. Сила всплытия (Архимеда)
+        let F_arch = 0;
+        let h_sub = H - E;
+        let formulaUsed = '';
+        let stateDisplay = '';
+
+        if (h_sub > 0) {
+            let h_eff = Math.min(h_sub, D);
+            if (h_eff < 0) h_eff = 0;
+            
+            if (pipeState === 'empty') {
+                // Незаполненная труба — используем внутренний диаметр d
+                F_arch = rhoWater * g * (Math.PI * d * d / 4) * h_eff;
+                formulaUsed = 'FА = ρ·g·(π·d²/4)·h';
+                stateDisplay = 'Незаполненная (пустая)';
+            } else {
+                // Заполненная труба — используем наружный диаметр D
+                F_arch = rhoWater * g * (Math.PI * D * D / 4) * h_eff;
+                formulaUsed = 'FА = ρ·g·(π·D²/4)·h';
+                stateDisplay = 'Заполненная (водой)';
+            }
+        } else {
+            F_arch = 0;
+            formulaUsed = 'h ≤ 0, вода не касается трубы';
+            stateDisplay = pipeState === 'empty' ? 'Незаполненная (пустая)' : 'Заполненная (водой)';
+        }
+
+        // Запас устойчивости
+        const F_stab = F_soil + F_pipe_weight;
+        
+        // Вычисляем запас с проверкой на деление на ноль
+        let safetyFactorText = '';
+        let isStable = false;
+        let stabilityText = '';
+        let warningText = '';
+
+        if (F_arch === 0) {
+            stabilityText = '✅ Устойчиво (FА = 0, вода не касается трубы)';
+            safetyFactorText = '∞ (FА = 0)';
+            isStable = true;
+            warningText = '';
+        } else if (F_stab >= F_arch) {
+            stabilityText = '✅ Устойчиво (Fтр + Fвт ≥ FА)';
+            safetyFactorText = (F_stab / F_arch).toFixed(2);
+            isStable = true;
+            warningText = '';
+        } else {
+            stabilityText = '⚠️ НЕУСТОЙЧИВО! Требуется балласт / анкеровка.';
+            safetyFactorText = (F_stab / F_arch).toFixed(2);
+            isStable = false;
+            warningText = 'Недостаточно сил удержания. Рассмотрите увеличение массы трубы или заглубление.';
+        }
+
+        // Форматирование сил
+        const fSoilStr = F_soil.toFixed(1) + ' Н';
+        const fPipeWeightStr = F_pipe_weight.toFixed(1) + ' Н';
+        const fArchStr = F_arch.toFixed(1) + ' Н';
+
+        // Обновление результатов
+        updateResults(kValue, stateDisplay, fSoilStr, fPipeWeightStr, fArchStr, formulaUsed, stabilityText, safetyFactorText, isStable, warningText);
+
+        // Визуальный отклик при нажатии на кнопку
+        if (flash) {
+            const resultsDiv = document.getElementById('result-area');
+            resultsDiv.classList.add('flash');
+            setTimeout(() => {
+                resultsDiv.classList.remove('flash');
+            }, 400);
+        }
+
+        // сохраняем данные для PDF
+        window._lastResult = {
+            D, d, H, E, rhoPipe, rhoSoil, tempC,
+            K: K_display, K_eff,
+            F_soil, F_pipe_weight, F_arch, F_stab, 
+            ratio: safetyFactorText,
+            stabilityText: stabilityText,
+            rhoWater, pipeState, formulaUsed, stateDisplay,
+            isStable: isStable,
+            h_sub: h_sub,
+            rhoWater: rhoWater,
+            g: g,
+            areaWall: areaWall,
+            K_display: K_display,
+            K_eff: K_eff
+        };
+    }
+
+    // --- PDF экспорт ---
+    function exportPDF() {
+        const data = window._lastResult;
+        if (!data) {
+            alert('Сначала выполните расчёт (кнопка "Выполнить расчёт").');
+            return;
+        }
+        const { 
+            D, d, H, E, rhoPipe, rhoSoil, tempC, K, K_eff, 
+            F_soil, F_pipe_weight, F_arch, F_stab, ratio, 
+            stabilityText, rhoWater, pipeState, formulaUsed, stateDisplay, isStable,
+            h_sub, g, areaWall, K_display
+        } = data;
+
+        // Расчётные формулы с подстановкой значений
+        const rhoWaterFormatted = rhoWater.toFixed(1);
+        const h_eff = Math.min(h_sub, D);
+        const h_effFormatted = h_eff > 0 ? h_eff.toFixed(3) : '0';
+        const D_formatted = (D*1000).toFixed(1);
+        const d_formatted = (d*1000).toFixed(1);
+
+        // Формула для K
+        const K_formula = `K = (H - E) / D = (${H.toFixed(2)} - ${E.toFixed(2)}) / ${D.toFixed(3)} = ${K_display.toFixed(3)}` + (K > 1 ? ' → принят K = 1' : '');
+
+        // Формула для силы давления грунта
+        const F_soil_formula = `Fтр = ρ_грунта · g · D · (H - E) = ${rhoSoil} · 9.81 · ${D.toFixed(3)} · ${(H - E).toFixed(2)} = ${F_soil.toFixed(1)} Н`;
+
+        // Формула для силы от массы трубы
+        const areaWallFormatted = areaWall.toFixed(6);
+        const F_pipe_formula = `Fвт = ρ_трубы · g · (π/4 · (D² - d²)) = ${rhoPipe} · 9.81 · (π/4 · (${D.toFixed(3)}² - ${d.toFixed(3)}²)) = ${F_pipe_weight.toFixed(1)} Н`;
+
+        // Формула для силы Архимеда
+        const diamUsed = pipeState === 'empty' ? 'd' : 'D';
+        const diamValue = pipeState === 'empty' ? d : D;
+        const diamFormatted = (diamValue*1000).toFixed(1);
+        const F_arch_formula = `FА = ρ_воды · g · (π·${diamUsed}²/4) · h = ${rhoWaterFormatted} · 9.81 · (π·${diamFormatted}²/4) · ${h_effFormatted} = ${F_arch.toFixed(1)} Н`;
+
+        // Условие устойчивости
+        const stabilityCondition = `Fтр + Fвт ${F_stab >= F_arch ? '≥' : '<'} FА → ${F_stab.toFixed(1)} ${F_stab >= F_arch ? '≥' : '<'} ${F_arch.toFixed(1)} → ${isStable ? 'УСТОЙЧИВО' : 'НЕУСТОЙЧИВО'}`;
+
+        const htmlContent = `
+        <html>
+        <head><meta charset="UTF-8"><title>Расчёт всплытия трубопровода</title>
+        <style>
+            body { font-family: 'Times New Roman', Times, serif; margin: 15mm 18mm; background: white; color: #000; line-height: 1.5; }
+            h1 { color: #1e6f5c; border-bottom: 2px solid #1e6f5c; padding-bottom: 6px; font-size: 22pt; }
+            h2 { margin-top: 18px; color: #0f4c3f; font-size: 16pt; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+            h3 { margin-top: 14px; color: #1e6f5c; font-size: 14pt; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            th, td { border: 1px solid #7f8f9f; padding: 6px 10px; font-size: 12pt; }
+            th { background: #e6f7f2; font-weight: 700; }
+            .result-box { background: #f4f8fc; padding: 10px 15px; border-left: 5px solid #1e6f5c; margin: 10px 0; }
+            .formula-block { background: #f8fafc; padding: 10px 14px; border-left: 4px solid #1e6f5c; margin: 10px 0; font-size: 12pt; line-height: 1.7; }
+            .note { font-size: 11pt; }
+            .stable { color: #16a34a; font-weight: bold; }
+            .unstable { color: #dc2626; font-weight: bold; }
+            .sub { font-size: 10pt; color: #555; }
+        </style>
+        </head>
+        <body>
+        <h1>Расчёт трубопровода на всплытие (СП 399.1325800.2018, Приложение Д, Д.1)</h1>
+        <p><strong>Дата расчёта:</strong> ${new Date().toLocaleString()}</p>
+
+        <h2>1. Исходные данные</h2>
+        <table>
+            <tr><th>Параметр</th><th>Обозначение</th><th>Значение</th></tr>
+            <tr><td>Наружный диаметр трубы</td><td>D</td><td>${D_formatted} мм (${D.toFixed(3)} м)</td></tr>
+            <tr><td>Внутренний диаметр трубы</td><td>d</td><td>${d_formatted} мм (${d.toFixed(3)} м)</td></tr>
+            <tr><td>Глубина заложения до низа трубы</td><td>H</td><td>${H.toFixed(2)} м</td></tr>
+            <tr><td>Уровень грунтовых вод (от поверхности)</td><td>E</td><td>${E.toFixed(2)} м</td></tr>
+            <tr><td>Состояние трубы</td><td>—</td><td>${stateDisplay}</td></tr>
+            <tr><td>Плотность материала трубы</td><td>ρ<sub>трубы</sub></td><td>${rhoPipe} кг/м³</td></tr>
+            <tr><td>Плотность грунта (насыщенного)</td><td>ρ<sub>грунта</sub></td><td>${rhoSoil} кг/м³</td></tr>
+            <tr><td>Температура воды</td><td>t</td><td>${tempC} °C</td></tr>
+            <tr><td>Плотность воды (при t = ${tempC} °C)</td><td>ρ<sub>воды</sub></td><td>${rhoWaterFormatted} кг/м³</td></tr>
+            <tr><td>Ускорение свободного падения</td><td>g</td><td>${g} м/с²</td></tr>
+        </table>
+
+        <h2>2. Расчётные формулы и промежуточные значения</h2>
+
+        <h3>Коэффициент K</h3>
+        <div class="formula-block">
+            <strong>K = (H – E) / D</strong><br>
+            ${K_formula}
+        </div>
+
+        <h3>Сила давления грунта F<sub>тр</sub></h3>
+        <div class="formula-block">
+            <strong>F<sub>тр</sub> = ρ<sub>грунта</sub> · g · D · (H – E)</strong><br>
+            ${F_soil_formula}
+        </div>
+
+        <h3>Сила от массы трубы F<sub>вт</sub></h3>
+        <div class="formula-block">
+            <strong>F<sub>вт</sub> = ρ<sub>трубы</sub> · g · (π/4 · (D² – d²))</strong><br>
+            ${F_pipe_formula}
+        </div>
+
+        <h3>Сила всплытия (Архимеда) F<sub>А</sub></h3>
+        <div class="formula-block">
+            <strong>F<sub>А</sub> = ρ<sub>воды</sub> · g · (π·${diamUsed}²/4) · h</strong><br>
+            где h = min(H – E, D) = min(${(H - E).toFixed(2)}, ${D.toFixed(3)}) = ${h_effFormatted} м<br><br>
+            ${F_arch_formula}
+        </div>
+
+        <h2>3. Результаты расчёта</h2>
+        <table>
+            <tr><th>Величина</th><th>Обозначение</th><th>Значение</th></tr>
+            <tr><td>Коэффициент зоны затопления</td><td>K</td><td>${K.toFixed(3)}${K > 1 ? ' (принят K=1)' : ''}</td></tr>
+            <tr><td>Сила давления грунта</td><td>F<sub>тр</sub></td><td>${F_soil.toFixed(1)} Н</td></tr>
+            <tr><td>Сила от массы трубы</td><td>F<sub>вт</sub></td><td>${F_pipe_weight.toFixed(1)} Н</td></tr>
+            <tr><td>Сумма удерживающих сил</td><td>F<sub>тр</sub> + F<sub>вт</sub></td><td>${F_stab.toFixed(1)} Н</td></tr>
+            <tr><td>Сила всплытия (Архимеда)</td><td>F<sub>А</sub></td><td>${F_arch.toFixed(1)} Н</td></tr>
+            <tr><td>Запас устойчивости</td><td>(F<sub>тр</sub>+F<sub>вт</sub>) / F<sub>А</sub></td><td>${ratio}</td></tr>
+        </table>
+
+        <div class="result-box">
+            <strong>Условие устойчивости:</strong> ${stabilityCondition}<br><br>
+            <strong>Вывод:</strong> <span class="${isStable ? 'stable' : 'unstable'}">${stabilityText}</span>
+        </div>
+
+        <p class="note"><i>Примечание:</i> Расчёт выполнен для ${pipeState === 'empty' ? 'незаполненной' : 'заполненной'} трубы по методике СП 399.1325800.2018 (Приложение Д, Д.1).</p>
+        </body>
+        </html>
+        `;
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+        setTimeout(() => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            setTimeout(() => document.body.removeChild(iframe), 1500);
+        }, 400);
+    }
+
+    document.getElementById('pdfBtn').addEventListener('click', exportPDF);
+
+    // Автозапуск при загрузке
+    window.onload = function() {
+        toggleTempField();
+        calculateFloat(false);
+    };
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109466159" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-
 </body>
 </html>
