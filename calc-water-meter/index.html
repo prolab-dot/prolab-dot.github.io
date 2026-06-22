@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <title>Подбор счетчика воды по СП 30.13330.2020</title>
+    <meta name="description" content="Автоматический подбор счетчика воды по таблице 12.1 с проверкой потерь напора согласно СП 30.13330.2020." />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #eef2f9; color: #1e293b; line-height: 1.5; padding: 2rem 1rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .calculator-card { background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1); border: 1px solid #e2edf2; }
+        .card-header { text-align: center; margin-bottom: 2rem; }
+        .card-header h1 { 
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, #0b3b3f, #1f8a7c); 
+            background-clip: text; 
+            -webkit-background-clip: text; 
+            color: transparent; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+        }
+        .card-header h1 .logo-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+        .card-header h1 .logo-link:hover {
+            transform: scale(1.1);
+        }
+        .card-header h1 .logo-icon {
+            display: inline-block;
+            font-size: 2.2rem;
+            color: #1f8a7c;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            opacity: 0;
+            transform: translateX(-40px) scale(0.6);
+            animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards,
+                       gentleGlow 0.4s ease-out 0.85s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes calculatorPop {
+            0% {
+                opacity: 0;
+                transform: translateX(-45px) scale(0.5);
+            }
+            40% {
+                opacity: 0.8;
+                transform: translateX(6px) scale(1.1);
+            }
+            70% {
+                transform: translateX(-2px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @keyframes gentleGlow {
+            0% { filter: drop-shadow(0 0 0 rgba(31, 138, 124, 0)); }
+            100% { filter: drop-shadow(0 0 6px rgba(31, 138, 124, 0.5)); }
+        }
+
+        .card-header p { color: #4a5a6e; margin-top: 0.5rem; font-size: 1rem; }
+
+        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.6rem; margin-bottom: 2rem; }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; color: #2c3e50; }
+        label i { margin-right: 6px; color: #1f8a7c; width: 1.2rem; }
+        input, select { padding: 12px 16px; border: 1.5px solid #dce5ec; border-radius: 1.2rem; font-size: 0.95rem; font-family: 'Inter', monospace; background: #ffffff; transition: 0.2s; width: 100%; }
+        input:focus, select:focus { outline: none; border-color: #1f8a7c; box-shadow: 0 0 0 3px rgba(31, 138, 124, 0.2); }
+        input[readonly] { background-color: #f8fafc; color: #1e2a3a; font-weight: 500; }
+
+        button { background: #1f6e62; color: white; border: none; padding: 14px 20px; border-radius: 3rem; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; margin: 1rem 0 0.5rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        button:hover { background: #0c4e44; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.1); }
+        .pdf-export-btn { background: #2c3e66; margin-top: 0.5rem; }
+        .pdf-export-btn:hover { background: #1e2a4a; }
+
+        .results-panel { margin-top: 2rem; background: #f9fdfe; border-radius: 1.5rem; padding: 1.2rem 1.5rem; border: 1px solid #e2edf2; }
+        .result-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: 1px solid #e9edf2; flex-wrap: wrap; gap: 10px; }
+        .result-row:last-child { border-bottom: none; }
+        .result-label { font-weight: 600; color: #2c3e50; font-size: 0.95rem; }
+        .result-value { font-weight: 800; font-size: 1.2rem; color: #1f6e62; background: #eafaf8; padding: 0.2rem 0.8rem; border-radius: 2rem; word-break: break-word; text-align: right; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+        .du-simple-selector { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            background: white; 
+            padding: 2px 8px 2px 12px; 
+            border-radius: 2rem; 
+            border: 2px solid #1f6e62; 
+        }
+        .du-simple-selector select { 
+            border: none; 
+            background: transparent; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            padding: 4px 0; 
+            font-family: 'Inter', sans-serif; 
+            color: #1f6e62; 
+            outline: none; 
+            cursor: pointer; 
+            width: 70px;
+        }
+        .du-simple-selector select option { 
+            font-weight: 500; 
+            font-size: 0.95rem; 
+        }
+        .du-simple-selector .du-label { 
+            font-weight: 600; 
+            color: #2c3e50; 
+            font-size: 0.85rem; 
+        }
+
+        .verdict { margin-top: 1rem; padding: 14px 20px; border-radius: 1.2rem; font-weight: 500; background: #e2ecf9; border-left: 6px solid #1f6bb0; color: #0b2d4f; }
+        .verdict.success { background: #dff0e6; border-left-color: #1e8b5e; color: #0a3d2a; }
+        .verdict.warning { background: #fef2e0; border-left-color: #c07d2c; color: #6b4a1a; }
+        .verdict.error { background: #fce8e8; border-left-color: #b33a3a; color: #6e1f1f; }
+
+        .table-wrap { margin-top: 24px; overflow-x: auto; border-radius: 1.2rem; border: 1px solid #dce5ec; background: white; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+        th { background: #eef4fc; color: #1b3b5c; font-weight: 600; padding: 12px 8px; text-align: center; border-bottom: 2px solid #c5d5e8; }
+        td { padding: 9px 6px; text-align: center; border-bottom: 1px solid #dae2ed; background: white; }
+        .highlight-row td { background: #d3e6ff !important; font-weight: 600; }
+
+        .note { font-size: 0.75rem; text-align: center; margin-top: 1.8rem; color: #5b6f82; border-top: 1px solid #e2edf2; padding-top: 1.2rem; }
+
+        @media (max-width: 680px) { 
+            .container { padding: 0; } 
+            .calculator-card { padding: 1rem; } 
+            .card-header h1 { font-size: 1.4rem; } 
+            .card-header h1 .logo-icon { font-size: 1.6rem; }
+            .result-value { font-size: 1rem; padding: 0.1rem 0.5rem; } 
+            .du-simple-selector select { width: 60px; font-size: 0.85rem; }
+            .du-simple-selector { padding: 2px 6px 2px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="calculator-card">
+        <div class="card-header">
+            <h1>
+                <a href="https://prolab-dot.github.io/" target="_blank" class="logo-link" title="Перейти на prolab-dot.github.io">
+                    <i class="fas fa-calculator logo-icon"></i>
+                </a>
+                <span>Подбор счётчика воды</span>
+            </h1>
+            <p>СП 30.13330.2020 &bull; Автоматический подбор по расходу и потерям (п. 12.14–12.16)</p>
+        </div>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label><i class="fas fa-clock"></i> Среднечасовой расход, м³/ч</label>
+                <input type="number" id="avgFlow" step="0.01" value="2.5" placeholder="м³/ч" />
+                <span style="font-size:0.75rem; color:#5b6f82; margin-top:4px;">q<sub>ср.час</sub> (за сутки/смену)</span>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-bolt"></i> Макс. секундный расход, л/с</label>
+                <input type="number" id="secFlow" step="0.01" value="1.2" placeholder="л/с" />
+                <span style="font-size:0.75rem; color:#5b6f82; margin-top:4px;">q<sub>max</sub> (расчётный)</span>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-fire-extinguisher"></i> Пожарный расход (опционально)</label>
+                <input type="number" id="fireFlow" step="0.01" value="0.0" placeholder="л/с" />
+                <span style="font-size:0.75rem; color:#5b6f82; margin-top:4px;">при пропуске через счетчик пожарного расхода, для проверки п.12.16б</span>
+            </div>
+        </div>
+
+        <button onclick="calculateMeter()"><i class="fas fa-calculator"></i> ПОДОБРАТЬ АВТОМАТИЧЕСКИ</button>
+        <button id="pdfBtn" class="pdf-export-btn"><i class="fas fa-file-pdf"></i> Экспорт расчёта в PDF</button>
+
+        <div class="results-panel" id="resultsPanel">
+            <div class="result-row"><span class="result-label"><i class="fas fa-arrows-left-right"></i> Подобранный диаметр ДУ:</span><span class="result-value" id="rDu"><span class="du-simple-selector"><span class="du-label">ДУ</span><select id="duSelectSimple"><option value="15">15 мм</option><option value="20">20 мм</option><option value="25">25 мм</option><option value="32">32 мм</option><option value="40">40 мм</option><option value="50">50 мм</option><option value="65">65 мм</option><option value="80">80 мм</option><option value="100">100 мм</option><option value="150">150 мм</option><option value="200">200 мм</option><option value="250">250 мм</option></select></span></span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-tachometer-alt"></i> Эксплуатационный расход:</span><span class="result-value" id="rExp">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-arrow-up"></i> Максимальный расход:</span><span class="result-value" id="rMax">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-weight-hanging"></i> Потери напора h (q<sub>max</sub>):</span><span class="result-value" id="rLoss">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-grip-lines"></i> Гидравлич. сопротивление S:</span><span class="result-value" id="rS">—</span></div>
+            <div class="result-row"><span class="result-label"><i class="fas fa-cog"></i> Тип счётчика:</span><span class="result-value" id="rType">—</span></div>
+            <div id="verdictBlock" class="verdict">▶ Нажмите «Подобрать» для расчёта</div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>ДУ, мм</th><th>Мин., м³/ч</th><th>Экспл., м³/ч</th><th>Макс., м³/ч</th><th>Порог чувств.</th><th>Q сут. макс.</th><th>S</th></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div class="note"><i class="fas fa-info-circle"></i> Крыльчатые счётчики: ДУ 15–50; турбинные: ДУ 65–250. Потери напора: ≤5 м (крыльч.) / ≤2.5 м (турб.) — п.12.16а.</div>
+    </div>
+</div>
+
+<script>
+    // ------------------------------------------------------------
+    // Данные таблицы 12.1 (отсортированы по возрастанию ДУ)
+    const meters = [
+        { du: 15, min: 0.03, exp: 1.2, max: 3,   threshold: 0.015, qDay: 45,  S: 14.5 },
+        { du: 20, min: 0.05, exp: 2.0, max: 5,   threshold: 0.025, qDay: 70,  S: 5.18 },
+        { du: 25, min: 0.07, exp: 2.8, max: 7,   threshold: 0.035, qDay: 100, S: 2.64 },
+        { du: 32, min: 0.1,  exp: 4.0, max: 10,  threshold: 0.05,  qDay: 140, S: 1.3 },
+        { du: 40, min: 0.16, exp: 6.4, max: 16,  threshold: 0.08,  qDay: 230, S: 0.5 },
+        { du: 50, min: 0.3,  exp: 12,  max: 30,  threshold: 0.15,  qDay: 450, S: 0.143 },
+        { du: 65, min: 1.5,  exp: 17,  max: 70,  threshold: 0.6,   qDay: 610, S: 810e-5 },
+        { du: 80, min: 2,    exp: 36,  max: 110, threshold: 0.7,   qDay: 1300, S: 264e-5 },
+        { du: 100,min: 3,    exp: 65,  max: 180, threshold: 1.2,   qDay: 2350, S: 76.6e-5 },
+        { du: 150,min: 4,    exp: 140, max: 350, threshold: 1.6,   qDay: 5100, S: 13e-5 },
+        { du: 200,min: 6,    exp: 210, max: 600, threshold: 3,     qDay: 7600, S: 3.5e-5 },
+        { du: 250,min: 15,   exp: 380, max: 1000,threshold: 7,     qDay: 13700,S: 1.8e-5 }
+    ];
+
+    // Заполнение таблицы
+    const tbody = document.getElementById('tableBody');
+    meters.forEach(m => {
+        const tr = document.createElement('tr');
+        tr.dataset.du = m.du;
+        tr.innerHTML = `<td><strong>${m.du}</strong></td><td>${m.min}</td><td>${m.exp}</td><td>${m.max}</td><td>${m.threshold}</td><td>${m.qDay}</td><td>${m.S}</td>`;
+        tbody.appendChild(tr);
+    });
+
+    let lastResult = null;
+    let isManualMode = false;
+
+    function getType(du) { return du <= 50 ? 'крыльчатый' : 'турбинный'; }
+    function getLimit(du) { return du <= 50 ? 5.0 : 2.5; }
+    function getLimitFire(du) { return du <= 50 ? 10.0 : 5.0; }
+    function calcLoss(S, q_lps) { return S * q_lps * q_lps; }
+
+    function getMeterByDu(du) {
+        return meters.find(m => m.du === du) || null;
+    }
+
+    function checkMeterByDu(du, avg, qMax, qFire) {
+        const m = getMeterByDu(du);
+        if (!m) return null;
+        if (m.exp < avg) return { meter: m, passExp: false, loss: 0, lossFire: 0, passLoss: false, passFire: false, overall: false };
+        const loss = calcLoss(m.S, qMax);
+        const passLoss = loss <= getLimit(m.du);
+        let passFire = true;
+        let lossFire = 0;
+        if (qFire > 0) {
+            lossFire = calcLoss(m.S, qFire);
+            passFire = lossFire <= getLimitFire(m.du);
+        }
+        const overall = passLoss && passFire && m.exp >= avg;
+        return { meter: m, passExp: m.exp >= avg, loss, lossFire, passLoss, passFire, overall };
+    }
+
+    function selectMeterWithLoss(avg, qMax, qFire) {
+        const results = [];
+        for (let m of meters) {
+            if (m.exp < avg) continue;
+            const loss = calcLoss(m.S, qMax);
+            const passLoss = loss <= getLimit(m.du);
+            let passFire = true;
+            let lossFire = 0;
+            if (qFire > 0) {
+                lossFire = calcLoss(m.S, qFire);
+                passFire = lossFire <= getLimitFire(m.du);
+            }
+            results.push({
+                meter: m,
+                loss: loss,
+                lossFire: lossFire,
+                passLoss: passLoss,
+                passFire: passFire,
+                overall: passLoss && passFire
+            });
+        }
+        for (let r of results) {
+            if (r.overall) return r;
+        }
+        if (results.length === 0) return null;
+        results.sort((a, b) => a.loss - b.loss);
+        return results[0];
+    }
+
+    // Обработчик изменения диаметра через селектор
+    function onDuChange(select) {
+        const duNum = parseInt(select.value);
+        const avgVal = parseFloat(document.getElementById('avgFlow').value) || 0;
+        const secVal = parseFloat(document.getElementById('secFlow').value) || 0;
+        const fireVal = parseFloat(document.getElementById('fireFlow').value) || 0;
+        
+        const manualResult = checkMeterByDu(duNum, avgVal, secVal, fireVal);
+        if (manualResult) {
+            isManualMode = true;
+            renderResults(manualResult, avgVal, secVal, fireVal, true);
+        } else {
+            alert('Счётчик с таким диаметром не найден в таблице.');
+            if (lastResult) {
+                select.value = lastResult.meter.du;
+            }
+        }
+    }
+
+    function renderResults(result, avg, sec, fire, isManual = false) {
+        const verdict = document.getElementById('verdictBlock');
+
+        if (!result) {
+            document.getElementById('rExp').innerHTML = '—';
+            document.getElementById('rMax').innerHTML = '—';
+            document.getElementById('rLoss').innerHTML = '—';
+            document.getElementById('rS').innerHTML = '—';
+            document.getElementById('rType').innerHTML = '—';
+            verdict.className = 'verdict error';
+            verdict.innerHTML = '❌ Нет подходящего счётчика. Возможно, расход слишком велик для максимального диаметра 250 мм.';
+            document.querySelectorAll('#tableBody tr').forEach(tr => tr.classList.remove('highlight-row'));
+            lastResult = null;
+            const select = document.getElementById('duSelectSimple');
+            if (select) select.value = '15';
+            return;
+        }
+
+        const m = result.meter;
+        const type = getType(m.du);
+        const limit = getLimit(m.du);
+        const loss = result.loss;
+        const lossFire = result.lossFire;
+        const pass = result.passLoss;
+        const passFire = result.passFire;
+        const overall = result.overall && result.passExp !== false;
+
+        const select = document.getElementById('duSelectSimple');
+        if (select) select.value = m.du;
+
+        document.getElementById('rExp').innerHTML = m.exp + ' м³/ч';
+        document.getElementById('rMax').innerHTML = m.max + ' м³/ч';
+        document.getElementById('rLoss').innerHTML = loss.toFixed(3) + ' м';
+        document.getElementById('rS').innerHTML = m.S;
+        document.getElementById('rType').innerHTML = type + (m.du <= 50 ? ' ⚙️' : ' 🌀');
+
+        let msg = '';
+        let cls = 'verdict';
+
+        const expOk = m.exp >= avg;
+
+        if (overall && expOk) {
+            cls += ' success';
+            msg = '✅ Счётчик ДУ ' + m.du + ' мм (' + type + ') ПОДХОДИТ. Потери h = ' + loss.toFixed(3) + ' м ≤ ' + limit + ' м (п.12.16а).';
+            if (fire > 0) {
+                msg += ' Пожарный расход: потери ' + lossFire.toFixed(3) + ' м ≤ ' + getLimitFire(m.du) + ' м (OK).';
+            }
+            if (isManual) msg += ' <br><span style="font-weight:400;">(Диаметр выбран вручную)</span>';
+            msg += '<br><span style="font-weight:400;">Среднечасовой расход ' + avg.toFixed(3) + ' м³/ч ≤ эксплуатационный ' + m.exp + ' м³/ч (п.12.14).</span>';
+        } else {
+            cls += ' warning';
+            if (!expOk) {
+                msg = '⚠️ Счётчик ДУ ' + m.du + ' мм НЕ ПРОХОДИТ по расходу: экспл. ' + m.exp + ' м³/ч < ' + avg.toFixed(3) + ' м³/ч (п.12.14).';
+            } else if (!pass) {
+                msg = '⚠️ Счётчик ДУ ' + m.du + ' мм (' + type + ') НЕ ПРОХОДИТ по потерям: ' + loss.toFixed(3) + ' м > ' + limit + ' м. ';
+            } else if (!passFire && fire > 0) {
+                msg = '⚠️ Счётчик ДУ ' + m.du + ' мм (' + type + ') НЕ ПРОХОДИТ по пожарному расходу: ' + lossFire.toFixed(3) + ' м > ' + getLimitFire(m.du) + ' м. ';
+            } else {
+                msg = '⚠️ Счётчик ДУ ' + m.du + ' мм (' + type + ') НЕ ПРОХОДИТ проверку. ';
+            }
+            if (isManual) msg += ' <br><span style="font-weight:400;">(Диаметр выбран вручную)</span>';
+            let foundBetter = false;
+            for (let m2 of meters) {
+                if (m2.du <= m.du) continue;
+                if (m2.exp < avg) continue;
+                const loss2 = calcLoss(m2.S, sec);
+                const pass2 = loss2 <= getLimit(m2.du);
+                let passFire2 = true;
+                if (fire > 0) {
+                    passFire2 = calcLoss(m2.S, fire) <= getLimitFire(m2.du);
+                }
+                if (pass2 && passFire2) {
+                    foundBetter = true;
+                    msg += ' Рекомендуется увеличить диаметр до ДУ ' + m2.du + ' мм (он проходит проверку).';
+                    break;
+                }
+            }
+            if (!foundBetter) {
+                msg += ' Увеличение диаметра не гарантирует прохождение проверки — возможно, потребуется снизить расход или применить специальные меры.';
+            }
+            if (expOk) {
+                msg += '<br><span style="font-weight:400;">Среднечасовой расход ' + avg.toFixed(3) + ' м³/ч ≤ эксплуатационный ' + m.exp + ' м³/ч (п.12.14).</span>';
+            }
+        }
+        verdict.className = cls;
+        verdict.innerHTML = msg;
+
+        document.querySelectorAll('#tableBody tr').forEach(tr => {
+            tr.classList.remove('highlight-row');
+            if (parseInt(tr.dataset.du) === m.du) tr.classList.add('highlight-row');
+        });
+
+        lastResult = { meter: m, avg, sec, fire, loss, lossFire, limit, pass, passFire, overall };
+    }
+
+    function calculateMeter() {
+        const avg = parseFloat(document.getElementById('avgFlow').value);
+        const sec = parseFloat(document.getElementById('secFlow').value);
+        const fire = parseFloat(document.getElementById('fireFlow').value) || 0;
+
+        if (isNaN(avg) || avg < 0) { alert('Введите корректный среднечасовой расход (≥ 0)'); return; }
+        if (isNaN(sec) || sec < 0) { alert('Введите корректный секундный расход (≥ 0)'); return; }
+
+        isManualMode = false;
+
+        const result = selectMeterWithLoss(avg, sec, fire);
+        if (result) {
+            renderResults(result, avg, sec, fire, false);
+        } else {
+            renderResults(null, avg, sec, fire, false);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Экспорт в PDF
+    function exportToPDF() {
+        if (!lastResult) { alert('Сначала выполните расчёт'); return; }
+        const r = lastResult;
+        const m = r.meter;
+        const dateStr = new Date().toLocaleString();
+        const type = getType(m.du);
+        const limit = getLimit(m.du);
+        const limitFire = getLimitFire(m.du);
+        const manualNote = isManualMode ? ' (диаметр выбран вручную)' : '';
+
+        const printHtml = `<!DOCTYPE html>
+        <html><head><meta charset="UTF-8"><title>Подбор счётчика воды</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:'Times New Roman',Times,serif; font-size:14pt; padding:15mm 12mm; background:white; color:#000000;}
+            h1{font-size:26pt; font-weight:bold; color:#1f8a7c; border-bottom:2px solid #1f8a7c; margin-bottom:12pt; padding-bottom:6pt;}
+            h2{font-size:20pt; font-weight:bold; margin:16pt 0 8pt 0; color:#0f4c3f;}
+            h3{font-size:17pt; font-weight:bold; margin:12pt 0 5pt 0; color:#1f6e62;}
+            table{width:100%; border-collapse:collapse; margin:10pt 0; font-size:13pt;}
+            td,th{border:1px solid #8ba0b0; padding:6pt 10pt; vertical-align:top;}
+            th{background:#e6f7f2; font-weight:700;}
+            .formula-block{background:#f8fafc; padding:10pt 14pt; border-left:4px solid #1f8a7c; margin:10pt 0; font-family:'Times New Roman',Times,serif; font-size:13pt; line-height:1.5;}
+            p, .note{font-size:13pt;}
+            strong{font-weight:700;}
+            .verdict-ok{color:#0a6b3a; font-weight:700;}
+            .verdict-fail{color:#b33a3a; font-weight:700;}
+            .verdict-warn{color:#b37a2a; font-weight:700;}
+        </style>
+        </head>
+        <body>
+        <h1>Подбор счётчика воды по СП 30.13330.2020</h1>
+        <p><strong>Дата расчёта:</strong> ${dateStr}</p>
+
+        <h2>1. Исходные данные</h2>
+        <table>
+            <tr><th>Параметр</th><th>Значение</th></tr>
+            <tr><td>Среднечасовой расход q<sub>ср.час</sub></td><td>${r.avg.toFixed(3)} м³/ч</td></tr>
+            <tr><td>Макс. секундный расход q<sub>max</sub></td><td>${r.sec.toFixed(3)} л/с</td></tr>
+            ${r.fire > 0 ? `<tr><td>Пожарный расход</td><td>${r.fire.toFixed(3)} л/с</td></tr>` : ''}
+        </table>
+
+        <h2>2. Подбор по таблице 12.1${manualNote}</h2>
+        <table>
+            <tr><th>Параметр</th><th>Значение</th></tr>
+            <tr><td>Подобранный диаметр ДУ</td><td>${m.du} мм</td></tr>
+            <tr><td>Эксплуатационный расход</td><td>${m.exp} м³/ч</td></tr>
+            <tr><td>Максимальный расход</td><td>${m.max} м³/ч</td></tr>
+            <tr><td>Гидравлическое сопротивление S</td><td>${m.S}</td></tr>
+            <tr><td>Тип счётчика</td><td>${type}</td></tr>
+        </table>
+
+        <h2>3. Проверка потерь напора (п. 12.16)</h2>
+        <div class="formula-block">
+            <strong>Формула:</strong> h = S · q²<br>
+            q = ${r.sec} л/с &nbsp;→&nbsp; h = ${m.S} · (${r.sec})² = <strong>${r.loss.toFixed(3)} м</strong>
+        </div>
+        <div class="formula-block">
+            <strong>Допустимые потери:</strong><br>
+            Для ${type} счётчика: ${limit} м вод. ст. (п.12.16а)<br>
+            ${r.fire > 0 ? `Для пожарного расхода: ${limitFire} м (п.12.16б)` : ''}
+        </div>
+        <div class="formula-block">
+            <strong>Результат проверки:</strong><br>
+            ${r.overall && r.meter.exp >= r.avg
+                ? `<span class="verdict-ok">✅ Счётчик ДУ ${m.du} мм ПОДХОДИТ. Потери ${r.loss.toFixed(3)} м ≤ ${limit} м.</span>` 
+                : `<span class="verdict-fail">❌ Счётчик ДУ ${m.du} мм НЕ ПРОХОДИТ: потери ${r.loss.toFixed(3)} м > ${limit} м.</span>`
+            }
+            ${r.fire > 0 ? `<br>Пожарный режим: ${r.passFire ? '✅ OK' : '❌ превышение'}` : ''}
+        </div>
+        <div class="formula-block">
+            <strong>Проверка по п.12.14:</strong><br>
+            ${r.avg.toFixed(3)} м³/ч ≤ ${m.exp} м³/ч — ${r.meter.exp >= r.avg ? '✅ условие выполнено' : '❌ не выполнено'}
+        </div>
+        </body></html>`;
+
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0px';
+        iframe.style.height = '0px';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(printHtml);
+        doc.close();
+        setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1500); }, 400);
+    }
+
+    // Назначение обработчиков
+    window.onload = function() {
+        document.getElementById('pdfBtn').addEventListener('click', exportToPDF);
+        document.getElementById('duSelectSimple').addEventListener('change', function() {
+            onDuChange(this);
+        });
+        calculateMeter();
+    };
+</script>
+</body>
+</html>
