@@ -158,11 +158,16 @@
         .cards-grid .calc-card:nth-child(2) { --order: 2; }
         .cards-grid .calc-card:nth-child(3) { --order: 3; }
         .cards-grid .calc-card:nth-child(4) { --order: 4; }
+        .cards-grid .calc-card:nth-child(5) { --order: 5; }
 
         .card-icon {
             font-size: 2.5rem;
             color: #1e6f5c;
             margin-bottom: 1rem;
+        }
+        /* Скрываем иконки в карточках, где они не нужны */
+        .calc-card.no-icon .card-icon {
+            display: none;
         }
         .calc-card h3 {
             font-size: 1.5rem;
@@ -203,6 +208,20 @@
             animation: subtleAppear 0.4s ease forwards;
             animation-delay: 0.55s;
         }
+        footer .contact {
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+        footer .contact a {
+            color: #1e6f5c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        footer .contact a:hover {
+            text-decoration: underline;
+        }
+
         @keyframes subtleAppear {
             to {
                 opacity: 1;
@@ -251,20 +270,27 @@
         {
           "@type": "ListItem",
           "position": 2,
+          "name": "Подбор счетчика воды",
+          "description": "Подбор счетчика воды по расходу и потерям напора",
+          "url": "https://ваш-домен.ru/calc-water-meter/index.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
           "name": "Гидравлический расчет водоотведения",
           "description": "Самотечные трубопроводы, уклоны, наполнение, скорость по таблицам Лукиных и СП 399",
           "url": "https://ваш-домен.ru/calc-hydraulic-sewer/index.html"
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "name": "Расчет трубопроводов на прочность",
           "description": "Прочностной расчет полимерных труб по СП 399.1325800.2018",
           "url": "https://ваш-домен.ru/calc-pipe-strength/index.html"
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "name": "Расчет трубопроводов на всплытие",
           "description": "Проверка трубопроводов на всплытие по СП 399.1325800.2018, Приложение Д, Д.1",
           "url": "https://ваш-домен.ru/calc-pipe-buoyancy/index.html"
@@ -283,42 +309,58 @@
         <p>Онлайн расчеты для проектирования систем водоснабжения и водоотведения</p>
     </div>
 
-    <!-- КАТЕГОРИЯ 1: Гидравлика -->
+    <!-- КАТЕГОРИЯ: Гидравлика водоснабжения -->
     <div class="category-section">
         <div class="category-title">
-            <i class="fas fa-water"></i>
-            <span>Гидравлические расчеты систем водоснабжения и водоотведения</span>
+            <i class="fas fa-faucet"></i>
+            <span>Гидравлические расчеты систем водоснабжения</span>
         </div>
         <div class="cards-grid">
-            <div class="calc-card">
-                <div class="card-icon"><i class="fas fa-faucet"></i></div>
-                <h3>Водоснабжение</h3>
-                <p>Подбор диаметра водопровода, расчет потерь по длине (в соответствии с таблицами Шевелева, СП 399.1325800.2018)</p>
+            <div class="calc-card no-icon">
+                <div class="card-icon"><i class="fas fa-water"></i></div>
+                <h3>Подбор диаметра водопровода</h3>
+                <p>Гидравлический расчет водопровода, потерь напора по длине (в соответствии с таблицами Шевелева, СП 399.1325800.2018)</p>
                 <a href="calc-hydraulic-water/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="calc-card">
-                <div class="card-icon"><i class="fas fa-toilet"></i></div>
-                <h3>Водоотведение (самотечное)</h3>
-                <p>Гидравлический расчёт безнапорных трубопроводов, уклонов, наполнения, скорости потока (в соответствии с таблицами Лукиных, СП 399.1325800.2018)</p>
+            <div class="calc-card no-icon">
+                <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h3>Подбор счетчика воды</h3>
+                <p>Подбор счетчика воды по максимальному расходу и потерям напора (в соответствии с СП 30.13330)</p>
+                <a href="calc-water-meter/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- КАТЕГОРИЯ: Гидравлика водоотведения -->
+    <div class="category-section">
+        <div class="category-title">
+            <i class="fas fa-toilet"></i>
+            <span>Гидравлические расчеты систем водоотведения</span>
+        </div>
+        <div class="cards-grid">
+            <div class="calc-card no-icon">
+                <div class="card-icon"><i class="fas fa-arrow-down"></i></div>
+                <h3>Гидравлический расчет безнапорных трубопроводов</h3>
+                <p>Гидравлический расчёт уклонов, наполнения, скорости потока (в соответствии с таблицами Лукиных, СП 399.1325800.2018)</p>
                 <a href="calc-hydraulic-sewer/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
 
-    <!-- КАТЕГОРИЯ 2: Прочность, устойчивость, всплытие -->
+    <!-- КАТЕГОРИЯ 3: Прочность, устойчивость, всплытие -->
     <div class="category-section">
         <div class="category-title">
             <i class="fas fa-hard-hat"></i>
             <span>Расчет на прочность, устойчивость и всплытие трубопроводов, колодцев и емкостей</span>
         </div>
         <div class="cards-grid">
-            <div class="calc-card">
+            <div class="calc-card no-icon">
                 <div class="card-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Расчет трубопроводов на прочность</h3>
                 <p>Прочностной расчет трубопроводов из полимерных материалов по СП 399.1325800.2018</p>
                 <a href="calc-pipe-strength/index.html" class="btn">Открыть калькулятор <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="calc-card">
+            <div class="calc-card no-icon">
                 <div class="card-icon"><i class="fas fa-arrow-up"></i></div>
                 <h3>Расчет трубопроводов на всплытие</h3>
                 <p>Проверка трубопроводов на всплытие по СП 399.1325800.2018, Приложение Д, Д.1</p>
@@ -329,6 +371,10 @@
 
     <footer>
         <p>© 2026 · Все расчёты интерактивны, работают в вашем браузере. Данные не покидают устройство.</p>
+        <div class="contact">
+            <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #1e6f5c;"></i>
+            По вопросам и предложениям: <a href="mailto:viv.omega@yandex.ru">viv.omega@yandex.ru</a>
+        </div>
     </footer>
 </div>
 
