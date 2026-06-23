@@ -299,10 +299,52 @@
             flex: 1;
             min-width: 200px;
         }
+
+        /* Стили для кнопки "На главную" */
+        .home-btn-container {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .home-btn i {
+            color: #1e6f5c;
+            font-size: 1rem;
+        }
+        .home-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.08);
+            text-decoration: none;
+        }
+        .home-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
 <div class="container">
+    <!-- Кнопка "Перейти на главную страницу" -->
+    <div class="home-btn-container">
+        <a href="https://prolab-dot.github.io/" class="home-btn" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-arrow-left"></i> Перейти на главную страницу
+        </a>
+    </div>
+
     <div class="header">
         <h1>
             <a href="https://prolab-dot.github.io/" target="_blank" rel="noopener noreferrer" aria-label="На главную страницу">
