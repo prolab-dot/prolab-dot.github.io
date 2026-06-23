@@ -28,6 +28,42 @@
             box-shadow: 0 20px 40px -12px rgba(0,0,0,0.12);
             border: 1px solid #e9edf4;
         }
+
+        /* Стили для кнопки "На главную" */
+        .home-btn-container {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .home-btn i {
+            color: #1e6f5c;
+            font-size: 1rem;
+        }
+        .home-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.08);
+            text-decoration: none;
+        }
+        .home-btn:active {
+            transform: translateY(0);
+        }
+
         .header {
             text-align: center;
             margin-bottom: 2rem;
@@ -99,7 +135,6 @@
             width: 1.8rem;
         }
         
-        /* Все поля в одной строке */
         .grid-all-inline {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -319,6 +354,13 @@
 </head>
 <body>
 <div class="container">
+    <!-- Кнопка "Перейти на главную страницу" -->
+    <div class="home-btn-container">
+        <a href="https://prolab-dot.github.io/" class="home-btn" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-arrow-left"></i> Перейти на главную страницу
+        </a>
+    </div>
+
     <div class="header">
         <h1>
             <span class="icon-wrapper">
@@ -333,7 +375,6 @@
     <div class="card">
         <div class="card-title no-icon">Геометрия и условия</div>
         
-        <!-- ВСЕ ПОЛЯ В ОДНУ СТРОКУ С ПОЛНЫМИ НАДПИСЯМИ -->
         <div class="grid-all-inline">
             <div class="input-group">
                 <label><i class="fas fa-circle"></i> Наружный диаметр D, мм</label>
@@ -361,7 +402,6 @@
             </div>
         </div>
 
-        <!-- Температура и состояние трубы — отдельная строка -->
         <div class="grid-3col" style="margin-top:0.8rem;">
             <div class="input-group" id="temp-group">
                 <label for="temp-water">
@@ -465,7 +505,6 @@
 
     // ----- ядро расчёта -----
     function calculateFloat(flash = false) {
-        // чтение (диаметры в мм, переводим в м)
         const D_mm = parseFloat(document.getElementById('diam-outer').value);
         const d_mm = parseFloat(document.getElementById('diam-inner').value);
         const D = D_mm / 1000;
@@ -476,10 +515,8 @@
         const rhoSoil = parseFloat(document.getElementById('rho-soil').value);
         const tempC = parseFloat(document.getElementById('temp-water').value) || 15;
 
-        // Состояние трубы
         const pipeState = document.querySelector('input[name="pipe-state"]:checked').value;
 
-        // валидация
         if (!D_mm || !d_mm || !H || E === undefined || !rhoPipe || !rhoSoil) {
             updateResults('—', '—', '—', '—', '—', '', '—', '—', false, '');
             return;
@@ -493,10 +530,8 @@
             return;
         }
 
-        // плотность воды от температуры (аппроксимация)
         const rhoWater = 1000 * (1 - (tempC - 4) * 0.00007);
 
-        // --- K ---
         let K = (H - E) / D;
         let K_display = K;
         let K_eff = K;
@@ -509,19 +544,14 @@
 
         const g = 9.81;
 
-        // 1. Сила давления грунта Fтр
         let F_soil = 0;
         if (H - E > 0) {
             F_soil = rhoSoil * g * D * (H - E);
-        } else {
-            F_soil = 0;
         }
 
-        // 2. Сила от массы трубы Fвт (вес трубы)
         const areaWall = (Math.PI / 4) * (D * D - d * d);
-        const F_pipe_weight = rhoPipe * g * areaWall; // Н/м
+        const F_pipe_weight = rhoPipe * g * areaWall;
 
-        // 3. Сила всплытия (Архимеда)
         let F_arch = 0;
         let h_sub = H - E;
         let formulaUsed = '';
@@ -532,12 +562,10 @@
             if (h_eff < 0) h_eff = 0;
             
             if (pipeState === 'empty') {
-                // Незаполненная труба — используем внутренний диаметр d
                 F_arch = rhoWater * g * (Math.PI * d * d / 4) * h_eff;
                 formulaUsed = 'FА = ρ·g·(π·d²/4)·h';
                 stateDisplay = 'Незаполненная (пустая)';
             } else {
-                // Заполненная труба — используем наружный диаметр D
                 F_arch = rhoWater * g * (Math.PI * D * D / 4) * h_eff;
                 formulaUsed = 'FА = ρ·g·(π·D²/4)·h';
                 stateDisplay = 'Заполненная (водой)';
@@ -548,10 +576,8 @@
             stateDisplay = pipeState === 'empty' ? 'Незаполненная (пустая)' : 'Заполненная (водой)';
         }
 
-        // Запас устойчивости
         const F_stab = F_soil + F_pipe_weight;
         
-        // Вычисляем запас с проверкой на деление на ноль
         let safetyFactorText = '';
         let isStable = false;
         let stabilityText = '';
@@ -574,15 +600,12 @@
             warningText = 'Недостаточно сил удержания. Рассмотрите увеличение массы трубы или заглубление.';
         }
 
-        // Форматирование сил
         const fSoilStr = F_soil.toFixed(1) + ' Н';
         const fPipeWeightStr = F_pipe_weight.toFixed(1) + ' Н';
         const fArchStr = F_arch.toFixed(1) + ' Н';
 
-        // Обновление результатов
         updateResults(kValue, stateDisplay, fSoilStr, fPipeWeightStr, fArchStr, formulaUsed, stabilityText, safetyFactorText, isStable, warningText);
 
-        // Визуальный отклик при нажатии на кнопку
         if (flash) {
             const resultsDiv = document.getElementById('result-area');
             resultsDiv.classList.add('flash');
@@ -591,7 +614,6 @@
             }, 400);
         }
 
-        // сохраняем данные для PDF
         window._lastResult = {
             D, d, H, E, rhoPipe, rhoSoil, tempC,
             K: K_display, K_eff,
@@ -601,7 +623,6 @@
             rhoWater, pipeState, formulaUsed, stateDisplay,
             isStable: isStable,
             h_sub: h_sub,
-            rhoWater: rhoWater,
             g: g,
             areaWall: areaWall,
             K_display: K_display,
@@ -623,30 +644,23 @@
             h_sub, g, areaWall, K_display
         } = data;
 
-        // Расчётные формулы с подстановкой значений
         const rhoWaterFormatted = rhoWater.toFixed(1);
         const h_eff = Math.min(h_sub, D);
         const h_effFormatted = h_eff > 0 ? h_eff.toFixed(3) : '0';
         const D_formatted = (D*1000).toFixed(1);
         const d_formatted = (d*1000).toFixed(1);
 
-        // Формула для K
         const K_formula = `K = (H - E) / D = (${H.toFixed(2)} - ${E.toFixed(2)}) / ${D.toFixed(3)} = ${K_display.toFixed(3)}` + (K > 1 ? ' → принят K = 1' : '');
 
-        // Формула для силы давления грунта
         const F_soil_formula = `Fтр = ρ_грунта · g · D · (H - E) = ${rhoSoil} · 9.81 · ${D.toFixed(3)} · ${(H - E).toFixed(2)} = ${F_soil.toFixed(1)} Н`;
 
-        // Формула для силы от массы трубы
-        const areaWallFormatted = areaWall.toFixed(6);
         const F_pipe_formula = `Fвт = ρ_трубы · g · (π/4 · (D² - d²)) = ${rhoPipe} · 9.81 · (π/4 · (${D.toFixed(3)}² - ${d.toFixed(3)}²)) = ${F_pipe_weight.toFixed(1)} Н`;
 
-        // Формула для силы Архимеда
         const diamUsed = pipeState === 'empty' ? 'd' : 'D';
         const diamValue = pipeState === 'empty' ? d : D;
         const diamFormatted = (diamValue*1000).toFixed(1);
         const F_arch_formula = `FА = ρ_воды · g · (π·${diamUsed}²/4) · h = ${rhoWaterFormatted} · 9.81 · (π·${diamFormatted}²/4) · ${h_effFormatted} = ${F_arch.toFixed(1)} Н`;
 
-        // Условие устойчивости
         const stabilityCondition = `Fтр + Fвт ${F_stab >= F_arch ? '≥' : '<'} FА → ${F_stab.toFixed(1)} ${F_stab >= F_arch ? '≥' : '<'} ${F_arch.toFixed(1)} → ${isStable ? 'УСТОЙЧИВО' : 'НЕУСТОЙЧИВО'}`;
 
         const htmlContent = `
@@ -753,7 +767,6 @@
 
     document.getElementById('pdfBtn').addEventListener('click', exportPDF);
 
-    // Автозапуск при загрузке
     window.onload = function() {
         toggleTempField();
         calculateFloat(false);
