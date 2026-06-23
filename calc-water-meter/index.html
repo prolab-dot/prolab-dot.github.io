@@ -14,6 +14,42 @@
         body { font-family: 'Inter', sans-serif; background: #eef2f9; color: #1e293b; line-height: 1.5; padding: 2rem 1rem; }
         .container { max-width: 1100px; margin: 0 auto; }
         .calculator-card { background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1); border: 1px solid #e2edf2; }
+        
+        /* Стили для кнопки "На главную" */
+        .home-btn-container {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .home-btn i {
+            color: #1e6f5c;
+            font-size: 1rem;
+        }
+        .home-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.08);
+            text-decoration: none;
+        }
+        .home-btn:active {
+            transform: translateY(0);
+        }
+
         .card-header { text-align: center; margin-bottom: 2rem; }
         .card-header h1 { 
             font-size: 2.2rem; 
@@ -152,12 +188,20 @@
             .result-value { font-size: 1rem; padding: 0.1rem 0.5rem; } 
             .du-simple-selector select { width: 60px; font-size: 0.85rem; }
             .du-simple-selector { padding: 2px 6px 2px 10px; }
+            .home-btn { font-size: 0.8rem; padding: 0.4rem 1rem; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="calculator-card">
+        <!-- Кнопка "Перейти на главную страницу" -->
+        <div class="home-btn-container">
+            <a href="https://prolab-dot.github.io/" class="home-btn" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-arrow-left"></i> Перейти на главную страницу
+            </a>
+        </div>
+
         <div class="card-header">
             <h1>
                 <a href="https://prolab-dot.github.io/" target="_blank" class="logo-link" title="Перейти на prolab-dot.github.io">
