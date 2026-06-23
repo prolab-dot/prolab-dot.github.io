@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Гидравлический калькулятор НАПОРНЫХ труб | Расчёт потерь напора ПЭ100</title>
-    <meta name="description" content="Калькулятор для напорных трубопроводов. Расчёт потерь напора, скорости потока, гидравлического уклона для ПЭ100 труб по ГОСТ Р 70628.2-2023.">
+    <meta name="description" content="Калькулятор для напорных трубопроводов. Расчёт потерь напора, скорости потока, гидравлического уклона для ПЭ100 труб по ГОСТ Р 70628.2-2023. Таблица Шевелева.">
+    <meta name="keywords" content="гидравлический калькулятор, потери напора, скорость потока, ПЭ100, таблица Шевелева, СП 399, водоснабжение, напорные трубы, гидравлический расчёт">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -13,6 +14,34 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #eef2f9; color: #1e293b; line-height: 1.5; padding: 2rem 1rem; }
         .container { max-width: 1100px; margin: 0 auto; }
+        
+        /* Кнопка "Перейти на главную страницу" */
+        .home-btn-container { text-align: left; margin-bottom: 1.5rem; }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .home-btn i { color: #1f8a7c; font-size: 1rem; }
+        .home-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.08);
+            text-decoration: none;
+        }
+        .home-btn:active { transform: translateY(0); }
+        
         .calculator-card { background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1); border: 1px solid #e2edf2; }
         .card-header { text-align: center; margin-bottom: 2rem; }
         .card-header h1 { font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #0b3b3f, #1f8a7c); background-clip: text; -webkit-background-clip: text; color: transparent; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
@@ -44,6 +73,13 @@
 </head>
 <body>
 <div class="container">
+    <!-- Кнопка "Перейти на главную страницу" -->
+    <div class="home-btn-container">
+        <a href="https://prolab-dot.github.io/" class="home-btn" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-arrow-left"></i> Перейти на главную страницу
+        </a>
+    </div>
+
     <div class="calculator-card">
         <div class="card-header">
             <h1>
