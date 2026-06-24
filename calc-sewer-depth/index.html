@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Глубина заложения канализации | Калькулятор СП 32.13330.2018</title>
+    <meta name="description" content="Расчёт глубины заложения канализационной трубы по СП 32.13330.2018 с учётом региона и типа грунта по СП 131.13330.">
+    <meta name="keywords" content="глубина заложения канализации, СП 32.13330.2018, промерзание грунта, СП 131.13330, лоток трубы">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109466159', 'ym');
+
+        ym(109466159, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109466159" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #eef2f9; color: #1e293b; line-height: 1.5; padding: 2rem 1rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        .home-btn-container { text-align: left; margin-bottom: 1.5rem; }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .home-btn i { color: #1f8a7c; font-size: 1rem; }
+        .home-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.08);
+            text-decoration: none;
+        }
+        .home-btn:active { transform: translateY(0); }
+        
+        .calculator-card { background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1); border: 1px solid #e2edf2; }
+        .card-header { text-align: center; margin-bottom: 2rem; }
+        .card-header h1 { font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #0b3b3f, #1f8a7c); background-clip: text; -webkit-background-clip: text; color: transparent; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .card-header h1 a { display: inline-block; line-height: 1; text-decoration: none; cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; }
+        .card-header h1 a:hover { transform: scale(1.05); filter: drop-shadow(0 0 8px rgba(31, 138, 124, 0.7)); }
+        .card-header h1 i { display: inline-block; font-size: 2.2rem; color: #1f8a7c; opacity: 0; transform: translateX(-40px) scale(0.6); animation: calculatorPop 0.55s cubic-bezier(0.25, 1.2, 0.4, 1) 0.35s forwards, gentleGlow 0.4s ease-out 0.85s forwards; pointer-events: none; }
+        @keyframes calculatorPop { 0% { opacity: 0; transform: translateX(-45px) scale(0.5); } 40% { opacity: 0.8; transform: translateX(6px) scale(1.1); } 70% { transform: translateX(-2px) scale(1.02); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes gentleGlow { 0% { filter: drop-shadow(0 0 0 rgba(31, 138, 124, 0)); } 100% { filter: drop-shadow(0 0 6px rgba(31, 138, 124, 0.5)); } }
+        .card-header p { color: #4a5a6e; margin-top: 0.5rem; font-size: 1rem; }
+        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.6rem; margin-bottom: 1.5rem; }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; color: #2c3e50; }
+        label i { margin-right: 6px; color: #1f8a7c; width: 1.2rem; }
+        input, select { padding: 12px 16px; border: 1.5px solid #dce5ec; border-radius: 1.2rem; font-size: 0.95rem; font-family: 'Inter', monospace; background: #ffffff; transition: 0.2s; }
+        input:focus, select:focus { outline: none; border-color: #1f8a7c; box-shadow: 0 0 0 3px rgba(31, 138, 124, 0.2); }
+        input:disabled { background-color: #f1f5f9; opacity: 0.7; }
+        input[readonly] { background-color: #f8fafc; color: #1e2a3a; font-weight: 500; }
+        .input-hint { font-size: 0.7rem; color: #5b6f82; margin-top: 4px; }
+        .input-mode-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: #f1f5f9;
+            padding: 0.3rem;
+            border-radius: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .input-mode-toggle button {
+            flex: 1;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #5b6f82;
+            margin: 0;
+        }
+        .input-mode-toggle button.active {
+            background: white;
+            color: #1f6e62;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .input-mode-toggle button:hover:not(.active) {
+            background: rgba(255,255,255,0.5);
+        }
+        button { background: #1f6e62; color: white; border: none; padding: 14px 20px; border-radius: 3rem; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; margin: 1rem 0 0.5rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        button:hover { background: #0c4e44; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.1); }
+        .results-panel { margin-top: 2rem; background: #f9fdfe; border-radius: 1.5rem; padding: 1.2rem 1.5rem; border: 1px solid #e2edf2; }
+        .result-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: 1px solid #e9edf2; flex-wrap: wrap; gap: 10px; }
+        .result-row:last-child { border-bottom: none; }
+        .result-label { font-weight: 600; color: #2c3e50; font-size: 0.95rem; }
+        .result-value { font-weight: 800; font-size: 1.2rem; color: #1f6e62; background: #eafaf8; padding: 0.2rem 0.8rem; border-radius: 2rem; word-break: break-word; text-align: right; }
+        .result-value.highlight { background: #d1fae5; color: #065f46; font-size: 1.4rem; }
+        .result-value .formula { font-size: 0.8rem; font-weight: 400; color: #5b6f82; display: block; }
+        .note { font-size: 0.75rem; text-align: center; margin-top: 1.8rem; color: #5b6f82; border-top: 1px solid #e2edf2; padding-top: 1.2rem; }
+        .hidden { display: none !important; }
+        @media (max-width: 680px) { .container { padding: 0; } .calculator-card { padding: 1.5rem; } .card-header h1 { font-size: 1.6rem; } .card-header h1 i { font-size: 1.8rem; } .result-value { font-size: 1rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="home-btn-container">
+        <a href="https://prolab-dot.github.io/" class="home-btn" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-arrow-left"></i> Перейти на главную страницу
+        </a>
+    </div>
+
+    <div class="calculator-card">
+        <div class="card-header">
+            <h1>
+                <a href="https://prolab-dot.github.io/" target="_blank" rel="noopener noreferrer" aria-label="На главную страницу">
+                    <i class="fas fa-calculator"></i>
+                </a>
+                <span>Калькулятор глубины заложения канализации</span>
+            </h1>
+            <p>Расчёт по СП 32.13330.2018 (Изменение №3), п. 6.2.4</p>
+        </div>
+
+        <!-- Режим ввода -->
+        <div class="input-group" style="margin-bottom: 1.5rem;">
+            <label><i class="fas fa-toggle-on"></i> Режим определения глубины промерзания</label>
+            <div class="input-mode-toggle" id="freeze-mode-toggle">
+                <button class="active" data-mode="manual" onclick="setFreezeMode('manual')">Ввести вручную</button>
+                <button data-mode="auto" onclick="setFreezeMode('auto')">По региону и грунту</button>
+            </div>
+            <span class="input-hint" id="mode-hint">Введите глубину проникания нулевой температуры</span>
+        </div>
+
+        <!-- Блок ручного ввода -->
+        <div id="manual-block">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label><i class="fas fa-thermometer-half"></i> Глубина проникания нулевой температуры (м)</label>
+                    <input type="number" id="manual-freeze-depth" value="1.8" step="0.05" placeholder="Введите значение в метрах">
+                    <span class="input-hint">Введите известную глубину проникания нулевой температуры</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок автоматического расчёта -->
+        <div id="auto-block" class="hidden">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Регион (город)</label>
+                    <select id="city-select">
+                        <option value="manual">Выберите город</option>
+                        <optgroup label="Центральный ФО">
+                            <option value="1.8|44|Москва">Москва</option>
+                            <option value="1.7|39|Санкт-Петербург">Санкт-Петербург</option>
+                            <option value="1.8|42|Воронеж">Воронеж</option>
+                            <option value="1.9|47|Нижний Новгород">Нижний Новгород</option>
+                        </optgroup>
+                        <optgroup label="Южный ФО">
+                            <option value="1.2|25|Краснодар">Краснодар</option>
+                            <option value="1.1|22|Сочи">Сочи</option>
+                            <option value="1.3|28|Ростов-на-Дону">Ростов-на-Дону</option>
+                            <option value="1.4|30|Волгоград">Волгоград</option>
+                        </optgroup>
+                        <optgroup label="Приволжский ФО">
+                            <option value="1.9|48|Казань">Казань</option>
+                            <option value="2.0|52|Самара">Самара</option>
+                            <option value="1.9|48|Уфа">Уфа</option>
+                            <option value="2.0|50|Пермь">Пермь</option>
+                        </optgroup>
+                        <optgroup label="Уральский ФО">
+                            <option value="2.2|62|Екатеринбург">Екатеринбург</option>
+                            <option value="2.4|72|Челябинск">Челябинск</option>
+                            <option value="2.3|66|Тюмень">Тюмень</option>
+                        </optgroup>
+                        <optgroup label="Сибирский ФО">
+                            <option value="2.5|80|Новосибирск">Новосибирск</option>
+                            <option value="2.8|92|Красноярск">Красноярск</option>
+                            <option value="2.7|88|Иркутск">Иркутск</option>
+                            <option value="3.0|108|Якутск">Якутск</option>
+                        </optgroup>
+                        <optgroup label="Дальневосточный ФО">
+                            <option value="2.1|58|Владивосток">Владивосток</option>
+                            <option value="2.6|78|Хабаровск">Хабаровск</option>
+                        </optgroup>
+                    </select>
+                    <span class="input-hint">Выберите город для автоматического определения Mt</span>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-thermometer-half"></i> Сумма отрицательных температур Mt (°C·мес)</label>
+                    <input type="number" id="mt-input" value="44" step="1" placeholder="Например: 44">
+                    <span class="input-hint" id="mt-hint">По СП 131.13330. Заполняется автоматически при выборе города</span>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-road"></i> Тип грунта</label>
+                    <select id="soil-type-select">
+                        <option value="0.34">Крупнообломочные</option>
+                        <option value="0.30" selected>Пески гравелистые, крупные, средней крупности</option>
+                        <option value="0.28">Пески мелкие, пылеватые, супеси</option>
+                        <option value="0.23">Суглинки, глины</option>
+                    </select>
+                    <span class="input-hint">Коэффициент d0 для расчёта по СП 131.13330</span>
+                </div>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-group">
+                    <label><i class="fas fa-water"></i> Уровень грунтовых вод</label>
+                    <select id="gw-level">
+                        <option value="normal">Не учитывать</option>
+                        <option value="high">Высокий (менее 2 м)</option>
+                        <option value="low">Низкий (более 2 м)</option>
+                    </select>
+                    <span class="input-hint">Влияет на расчётную глубину промерзания</span>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-sliders-h"></i> Поправочный коэффициент</label>
+                    <input type="number" id="correction-factor" value="1.0" step="0.05" placeholder="1.0" min="0.5" max="1.5">
+                    <span class="input-hint">Для учёта местных условий (снежный покров и т.д.)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Общие поля -->
+        <div class="input-grid" style="margin-top: 1rem;">
+            <div class="input-group">
+                <label><i class="fas fa-ruler-vertical"></i> Наружный диаметр трубы D (мм)</label>
+                <input type="number" id="pipe-diameter" value="160" step="1" placeholder="Введите диаметр в мм">
+                <span class="input-hint">Для D ≤ 500 мм — снижение 0,3 м; для D > 500 мм — снижение 0,5 м</span>
+            </div>
+        </div>
+
+        <button onclick="calculateDepth()"><i class="fas fa-calculator"></i> РАССЧИТАТЬ ГЛУБИНУ ЗАЛОЖЕНИЯ</button>
+
+        <div class="results-panel" id="depth-results">
+            <div class="result-row">
+                <span class="result-label">Глубина проникания нулевой температуры:</span>
+                <span class="result-value" id="calc-freeze">—</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Минимальная глубина заложения ЛОТКА:</span>
+                <span class="result-value highlight" id="final-depth">—</span>
+            </div>
+            <div class="result-row" style="border-bottom: none; background:#f8fafc; border-radius:0.8rem; margin-top:0.5rem; padding:0.8rem 1rem;">
+                <span class="result-label" style="font-size:0.8rem; color:#5b6f82;">Примечание:</span>
+                <span class="result-value" style="font-size:0.8rem; font-weight:400; background:transparent; color:#2c3e50; text-align:left; padding:0;">При использовании теплоизоляции глубина может быть уменьшена по теплотехническому расчёту</span>
+            </div>
+        </div>
+        <div class="note">
+            <i class="fas fa-database"></i> Расчёт по СП 32.13330.2018 «Канализация. Наружные сети и сооружения» (Изменение №3), п. 6.2.4. 
+            Глубина промерзания — по СП 131.13330 «Строительная климатология»: <strong>dfn = d0 × √(Mt)</strong>.
+            <br><span style="font-size:0.7rem; color:#7a8a9e;">Mt — сумма абсолютных значений среднемесячных отрицательных температур за зиму.</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    let lastCalcData = null;
+    let currentMode = 'manual';
+
+    const SOIL_COEFFICIENTS = {
+        '0.34': 'крупнообломочные',
+        '0.30': 'пески гравелистые, крупные, средней крупности',
+        '0.28': 'пески мелкие, пылеватые, супеси',
+        '0.23': 'суглинки, глины'
+    };
+
+    function setFreezeMode(mode) {
+        currentMode = mode;
+        
+        document.querySelectorAll('#freeze-mode-toggle button').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+
+        const autoBlock = document.getElementById('auto-block');
+        const manualBlock = document.getElementById('manual-block');
+        const hint = document.getElementById('mode-hint');
+
+        if (mode === 'auto') {
+            autoBlock.classList.remove('hidden');
+            manualBlock.classList.add('hidden');
+            hint.textContent = 'Автоматический расчёт по СП 131.13330 (регион + грунт)';
+            updateCityData();
+        } else {
+            autoBlock.classList.add('hidden');
+            manualBlock.classList.remove('hidden');
+            hint.textContent = 'Введите глубину проникания нулевой температуры';
+            calculateDepth();
+        }
+    }
+
+    function getCityData() {
+        const select = document.getElementById('city-select');
+        const value = select.value;
+        if (value === 'manual' || value === '') return null;
+        const parts = value.split('|');
+        return {
+            freezeBase: parseFloat(parts[0]),
+            mt: parseFloat(parts[1]),
+            city: parts[2]
+        };
+    }
+
+    function updateCityData() {
+        const data = getCityData();
+        const mtInput = document.getElementById('mt-input');
+        const mtHint = document.getElementById('mt-hint');
+        
+        if (data) {
+            mtInput.value = data.mt;
+            mtInput.disabled = true;
+            mtInput.style.background = '#f1f5f9';
+            mtHint.textContent = `Автоматически для ${data.city} (Mt = ${data.mt}°C·мес)`;
+        } else {
+            mtInput.disabled = false;
+            mtInput.style.background = '#ffffff';
+            mtHint.textContent = 'Введите сумму отрицательных температур по СП 131.13330';
+        }
+        if (currentMode === 'auto') calculateDepth();
+    }
+
+    function calculateDepth() {
+        let freezeDepth;
+        let formulaText = '';
+        let modeText = '';
+
+        if (currentMode === 'auto') {
+            let mt = parseFloat(document.getElementById('mt-input').value);
+            if (isNaN(mt) || mt <= 0) {
+                document.getElementById('calc-freeze').textContent = '—';
+                document.getElementById('final-depth').textContent = '—';
+                return;
+            }
+
+            let d0 = parseFloat(document.getElementById('soil-type-select').value);
+            let soilName = SOIL_COEFFICIENTS[d0.toString()] || 'неизвестный грунт';
+            
+            freezeDepth = d0 * Math.sqrt(mt);
+
+            let correction = parseFloat(document.getElementById('correction-factor').value);
+            if (!isNaN(correction) && correction > 0 && correction !== 1.0) {
+                freezeDepth = freezeDepth * correction;
+            }
+
+            let gwLevel = document.getElementById('gw-level').value;
+            let gwFactor = 1.0;
+            if (gwLevel === 'high') gwFactor = 0.85;
+            if (gwLevel !== 'normal') {
+                freezeDepth = freezeDepth * gwFactor;
+            }
+
+            formulaText = `${d0.toFixed(2)} × √(${mt.toFixed(0)}) = ${(d0 * Math.sqrt(mt)).toFixed(2)} м`;
+            if (correction !== 1.0 && !isNaN(correction)) formulaText += ` × ${correction.toFixed(2)}`;
+            if (gwLevel !== 'normal') formulaText += ` × ${gwFactor.toFixed(2)} (УГВ)`;
+            
+            modeText = ' (авто)';
+            
+        } else {
+            let manualValue = parseFloat(document.getElementById('manual-freeze-depth').value);
+            if (isNaN(manualValue) || manualValue <= 0) {
+                document.getElementById('calc-freeze').textContent = '—';
+                document.getElementById('final-depth').textContent = '—';
+                return;
+            }
+            freezeDepth = manualValue;
+            formulaText = `введено вручную: ${freezeDepth.toFixed(2)} м`;
+            modeText = ' (вручную)';
+        }
+
+        freezeDepth = Math.round(freezeDepth * 20) / 20;
+
+        let diameter = parseFloat(document.getElementById('pipe-diameter').value);
+        if (isNaN(diameter) || diameter <= 0) {
+            document.getElementById('calc-freeze').innerHTML = freezeDepth.toFixed(2) + ' м' + modeText + ' <span class="formula">(' + formulaText + ')</span>';
+            document.getElementById('final-depth').textContent = '—';
+            return;
+        }
+
+        let reduction = (diameter <= 500) ? 0.3 : 0.5;
+
+        let depthToBottom = freezeDepth - reduction;
+        depthToBottom = Math.round(depthToBottom * 20) / 20;
+
+        document.getElementById('calc-freeze').innerHTML = 
+            freezeDepth.toFixed(2) + ' м' + modeText + 
+            ' <span class="formula">(' + formulaText + ')</span>';
+        
+        let finalEl = document.getElementById('final-depth');
+        finalEl.textContent = depthToBottom.toFixed(2) + ' м (лоток)';
+        finalEl.className = 'result-value highlight';
+
+        lastCalcData = {
+            mode: currentMode,
+            freezeDepth: freezeDepth,
+            diameter: diameter,
+            reduction: reduction,
+            depthToBottom: depthToBottom,
+            formula: formulaText,
+            mt: currentMode === 'auto' ? parseFloat(document.getElementById('mt-input').value) : null,
+            d0: currentMode === 'auto' ? parseFloat(document.getElementById('soil-type-select').value) : null,
+            soilName: currentMode === 'auto' ? SOIL_COEFFICIENTS[document.getElementById('soil-type-select').value] : 'ручной ввод',
+            correction: currentMode === 'auto' ? parseFloat(document.getElementById('correction-factor').value) : 1.0,
+            gwLevel: currentMode === 'auto' ? document.getElementById('gw-level').value : 'normal',
+            manualValue: currentMode === 'manual' ? parseFloat(document.getElementById('manual-freeze-depth').value) : null
+        };
+        return lastCalcData;
+    }
+
+    window.onload = function() {
+        document.getElementById('city-select').addEventListener('change', updateCityData);
+        
+        document.getElementById('mt-input').addEventListener('input', function() {
+            if (document.getElementById('city-select').value !== 'manual' && document.getElementById('city-select').value !== '') {
+                updateCityData();
+            } else {
+                if (currentMode === 'auto') calculateDepth();
+            }
+        });
+        
+        document.getElementById('soil-type-select').addEventListener('change', function() {
+            if (currentMode === 'auto') calculateDepth();
+        });
+        document.getElementById('gw-level').addEventListener('change', function() {
+            if (currentMode === 'auto') calculateDepth();
+        });
+        document.getElementById('correction-factor').addEventListener('input', function() {
+            if (currentMode === 'auto') calculateDepth();
+        });
+        
+        document.getElementById('manual-freeze-depth').addEventListener('input', function() {
+            if (currentMode === 'manual') calculateDepth();
+        });
+        
+        document.getElementById('pipe-diameter').addEventListener('input', function() {
+            calculateDepth();
+        });
+        
+        setFreezeMode('manual');
+    };
+</script>
+</body>
+</html>
